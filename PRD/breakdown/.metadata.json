@@ -1,0 +1,215 @@
+{
+  "project_name": "LIVVLY Voice Dating App",
+  "prd_path": "D:\\Livvly-Req\\PRD\\LIVVLY_Voice_Dating_App_PRD.md",
+  "prd_line_count": 3041,
+  "initialized_at": "2026-01-19T20:30:00Z",
+  "last_updated": "2026-01-19T21:45:00Z",
+  "status": "in_progress",
+  "current_section": "04-revenue-model",
+  "config": {
+    "base_directory": "PRD",
+    "git_integration": {
+      "enabled": true,
+      "auto_commit": false
+    },
+    "validation": {
+      "acceptance_criteria_min": 2,
+      "dd_rationale_min_chars": 50,
+      "require_research_citations": true
+    },
+    "changelog": {
+      "enabled": true,
+      "auto_update": true
+    }
+  },
+  "sections": [
+    {
+      "id": "01-executive-summary",
+      "title": "Executive Summary",
+      "line_start": 31,
+      "line_end": 62,
+      "abbreviation": "ES",
+      "complexity": "simple",
+      "status": "completed",
+      "type": "business",
+      "estimated_time_minutes": 20,
+      "completed_at": "2026-01-19T20:45:00Z",
+      "requirements_count": 11,
+      "questions_count": 9,
+      "design_decisions_count": 0,
+      "research_sources_count": 0
+    },
+    {
+      "id": "02-market-analysis",
+      "title": "Market Analysis",
+      "line_start": 63,
+      "line_end": 120,
+      "abbreviation": "MA",
+      "complexity": "moderate",
+      "status": "completed",
+      "type": "business",
+      "estimated_time_minutes": 25,
+      "completed_at": "2026-01-19T21:15:00Z",
+      "requirements_count": 13,
+      "questions_count": 9,
+      "design_decisions_count": 0,
+      "research_sources_count": 20
+    },
+    {
+      "id": "03-product-vision",
+      "title": "Product Vision",
+      "line_start": 121,
+      "line_end": 161,
+      "abbreviation": "PV",
+      "complexity": "simple",
+      "status": "completed",
+      "type": "business",
+      "estimated_time_minutes": 20,
+      "completed_at": "2026-01-19T21:45:00Z",
+      "requirements_count": 13,
+      "questions_count": 9,
+      "design_decisions_count": 0,
+      "research_sources_count": 0
+    },
+    {
+      "id": "04-revenue-model",
+      "title": "Revenue Model",
+      "line_start": 162,
+      "line_end": 227,
+      "abbreviation": "RM",
+      "complexity": "moderate",
+      "status": "pending",
+      "type": "business",
+      "estimated_time_minutes": 25
+    },
+    {
+      "id": "05-feature-specifications",
+      "title": "Feature Specifications",
+      "line_start": 228,
+      "line_end": 538,
+      "abbreviation": "FS",
+      "complexity": "complex",
+      "status": "pending",
+      "type": "technical",
+      "estimated_time_minutes": 60
+    },
+    {
+      "id": "06-technical-architecture",
+      "title": "Technical Architecture",
+      "line_start": 539,
+      "line_end": 657,
+      "abbreviation": "TA",
+      "complexity": "complex",
+      "status": "pending",
+      "type": "technical",
+      "estimated_time_minutes": 50
+    },
+    {
+      "id": "07-database-schema",
+      "title": "Database Schema",
+      "line_start": 658,
+      "line_end": 1139,
+      "abbreviation": "DB",
+      "complexity": "complex",
+      "status": "pending",
+      "type": "technical",
+      "estimated_time_minutes": 55
+    },
+    {
+      "id": "08-api-specifications",
+      "title": "API Specifications",
+      "line_start": 1140,
+      "line_end": 1927,
+      "abbreviation": "API",
+      "complexity": "complex",
+      "status": "pending",
+      "type": "technical",
+      "estimated_time_minutes": 70
+    },
+    {
+      "id": "09-coin-economy-design",
+      "title": "Coin Economy Design",
+      "line_start": 1928,
+      "line_end": 2002,
+      "abbreviation": "CE",
+      "complexity": "moderate",
+      "status": "pending",
+      "type": "implementation",
+      "estimated_time_minutes": 30
+    },
+    {
+      "id": "10-creator-payout-system",
+      "title": "Creator Payout System",
+      "line_start": 2003,
+      "line_end": 2125,
+      "abbreviation": "CP",
+      "complexity": "moderate",
+      "status": "pending",
+      "type": "implementation",
+      "estimated_time_minutes": 35
+    },
+    {
+      "id": "11-n8n-automation-workflows",
+      "title": "N8N Automation Workflows",
+      "line_start": 2126,
+      "line_end": 2444,
+      "abbreviation": "AW",
+      "complexity": "moderate",
+      "status": "pending",
+      "type": "implementation",
+      "estimated_time_minutes": 40
+    },
+    {
+      "id": "12-legal-compliance",
+      "title": "Legal & Compliance",
+      "line_start": 2445,
+      "line_end": 2705,
+      "abbreviation": "LC",
+      "complexity": "moderate",
+      "status": "pending",
+      "type": "operational",
+      "estimated_time_minutes": 35
+    },
+    {
+      "id": "13-implementation-roadmap",
+      "title": "Implementation Roadmap",
+      "line_start": 2706,
+      "line_end": 2825,
+      "abbreviation": "IR",
+      "complexity": "moderate",
+      "status": "pending",
+      "type": "implementation",
+      "estimated_time_minutes": 30
+    },
+    {
+      "id": "14-cost-estimation",
+      "title": "Cost Estimation",
+      "line_start": 2826,
+      "line_end": 2907,
+      "abbreviation": "COE",
+      "complexity": "simple",
+      "status": "pending",
+      "type": "implementation",
+      "estimated_time_minutes": 20
+    },
+    {
+      "id": "15-success-metrics",
+      "title": "Success Metrics",
+      "line_start": 2908,
+      "line_end": 3041,
+      "abbreviation": "SM",
+      "complexity": "moderate",
+      "status": "pending",
+      "type": "business",
+      "estimated_time_minutes": 25
+    }
+  ],
+  "statistics": {
+    "total_sections": 15,
+    "completed_sections": 3,
+    "total_requirements": 37,
+    "total_design_decisions": 0,
+    "total_questions_answered": 27,
+    "total_research_sources": 20
+  }
+}

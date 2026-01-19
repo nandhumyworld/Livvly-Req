@@ -11,7 +11,10 @@
       "mcp__plugin_serena_serena__activate_project",
       "mcp__plugin_serena_serena__check_onboarding_performed",
       "mcp__plugin_serena_serena__list_dir",
-      "Bash(echo:*)"
+      "Bash(echo:*)",
+      "Skill(prd-breakdown)",
+      "Bash(python -c \"import json; data=json.load\\(open\\(''.metadata.json''\\)\\); section=next\\(\\(s for s in data[''sections''] if s[''id'']==''03-product-vision''\\), None\\); section[''status'']=''completed''; section[''completed_at'']=''2026-01-19T21:45:00Z''; section[''requirements_count'']=13; section[''questions_count'']=9; section[''design_decisions_count'']=0; section[''research_sources_count'']=0; data[''statistics''][''completed_sections'']=3; data[''statistics''][''total_requirements'']=37; data[''statistics''][''total_questions_answered'']=27; json.dump\\(data, open\\(''.metadata.json'',''w''\\), indent=2\\)\")",
+      "Bash(git add:*)"
     ]
   },
   "enabledPlugins": {

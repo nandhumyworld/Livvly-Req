@@ -1,0 +1,36 @@
+{
+  "project_context": {
+    "domain": "Voice Dating & Social Application",
+    "target_market": "India - Tier 2 and Tier 3 cities, focusing on Tamil, Telugu, and Kannada speakers",
+    "primary_users": "Users aged 18-35 seeking companionship, friendship, dating, and content creators seeking income",
+    "key_differentiators": [
+      "Higher creator revenue share (75-85% vs 50-60% competitors)",
+      "Regional language support (Tamil-first)",
+      "AI companion + Real creators hybrid model",
+      "Fast payout (T+1 vs T+3 to T+7)"
+    ],
+    "technology_stack": {
+      "mobile": "React Native",
+      "backend": "Node.js",
+      "database": "PostgreSQL + Redis",
+      "realtime": "Agora SDK",
+      "automation": "N8N",
+      "payment": "Razorpay"
+    }
+  },
+  "terminology": {
+    "active_user": "User who performs at least one engagement action (call, gift, room participation) within measurement period",
+    "creator": "User who provides entertainment/companionship services and earns through calls, gifts, and virtual items",
+    "coin": "Virtual currency purchased by users to spend on platform features (calls, gifts, etc.)",
+    "GMV": "Gross Merchandise Value - total transaction value before any deductions",
+    "T+1": "Transaction settlement on next business day",
+    "live_room": "Audio-only group chat space where multiple users can join and interact"
+  },
+  "user_preferences": {
+    "sprint_duration": "2 weeks",
+    "documentation_style": "detailed_with_examples",
+    "priority_focus": "MVP features first, then scaling features"
+  },
+  "open_questions": [],
+  "assumptions": []
+}
