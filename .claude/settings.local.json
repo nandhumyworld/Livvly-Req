@@ -11,7 +11,8 @@
       "mcp__plugin_serena_serena__activate_project",
       "mcp__plugin_serena_serena__check_onboarding_performed",
       "mcp__plugin_serena_serena__list_dir",
-      "Bash(echo:*)"
+      "Bash(echo:*)",
+      "Bash(powershell -Command \"\\(Get-Content ''D:\\\\Kapil\\\\Career\\\\GitHub\\\\Livvly-Req\\\\Livvly-Req\\\\PRD\\\\LIVVLY_Voice_Dating_App_PRD.md'' | Measure-Object -Line\\).Lines\")"
     ]
   },
   "enabledPlugins": {

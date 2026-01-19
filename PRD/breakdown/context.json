@@ -1,0 +1,84 @@
+{
+  "project": {
+    "name": "LIVVLY",
+    "type": "Voice Dating & Social App",
+    "version": "1.0",
+    "status": "Draft",
+    "author": "Shadow Market",
+    "target_market": "India (Tier-2/3 cities)",
+    "primary_language": "Tamil",
+    "secondary_languages": ["Telugu", "Kannada", "Hindi", "English"]
+  },
+  "terminology": {
+    "LIVVLY": "The app/platform name",
+    "Creator": "Users who earn money by providing companionship/entertainment",
+    "Coins": "Virtual currency purchased by users to spend on the platform",
+    "Gems": "Currency earned by creators that can be converted to real money",
+    "Live Room": "Audio/video room where multiple users can interact",
+    "VIP": "Premium subscription tier with enhanced features",
+    "Agency": "Organization that manages multiple creators and takes commission",
+    "GMV": "Gross Merchandise Value - total transaction volume",
+    "T+1 Payout": "Next-day payout (settlement within 1 business day)",
+    "KYC": "Know Your Customer - identity verification process",
+    "OTP": "One-Time Password for authentication",
+    "ASO": "App Store Optimization"
+  },
+  "business_context": {
+    "revenue_model": "Freemium with virtual currency (coins)",
+    "creator_revenue_share": "75-85%",
+    "platform_take_rate": "15-25%",
+    "primary_revenue_streams": [
+      "In-App Purchases (Coins)",
+      "Paid Calls (per-minute)",
+      "Virtual Gifts",
+      "VIP Subscriptions",
+      "Rewarded Ads"
+    ],
+    "target_audience": {
+      "age_range": "18-35",
+      "geographic": ["Tamil Nadu", "Andhra Pradesh", "Karnataka"],
+      "personas": [
+        "Lonely professionals seeking companionship",
+        "Users looking for friendship/dating",
+        "Content creators seeking income"
+      ]
+    }
+  },
+  "technical_context": {
+    "platform": "Mobile (Android primary, iOS secondary)",
+    "backend": "Supabase",
+    "realtime": "WebRTC for voice/video",
+    "payments": "Razorpay",
+    "automation": "N8N workflows",
+    "ai_features": "AI companion integration"
+  },
+  "competitors": {
+    "direct": ["FRND", "Connecto", "Dost"],
+    "indirect": ["Tango", "Bigo Live"],
+    "key_differentiators": [
+      "Higher creator revenue share (75-85% vs 50-60%)",
+      "Regional language focus (Tamil-first)",
+      "AI + Human hybrid model",
+      "Faster payout (T+1 vs T+3 to T+7)"
+    ]
+  },
+  "milestones": {
+    "6_months": {
+      "active_users": 50000,
+      "monthly_gmv": "₹20L"
+    },
+    "12_months": {
+      "active_users": 200000,
+      "monthly_gmv": "₹1Cr"
+    },
+    "24_months": {
+      "active_users": 1000000,
+      "monthly_gmv": "₹5Cr"
+    }
+  },
+  "notes": [
+    "MVP scope: Phase 1 (0-6 months) targeting 50K users and ₹20L GMV",
+    "AI Companion: Deferred to Phase 2 - launch with human creators only",
+    "Agency Model: Required for MVP - need agency onboarding and commission tracking from day one"
+  ]
+}
