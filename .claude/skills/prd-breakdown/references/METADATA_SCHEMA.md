@@ -66,6 +66,30 @@ Single source of truth for breakdown progress, enabling:
   - See "Statistics Object" schema below
   - Only present when breakdown is complete
 
+- `checkpoints` (array): Checkpoint history (optional)
+  - Array of checkpoint objects created every 5 sections
+  - Each checkpoint contains:
+    - `checkpoint_id` (integer): Checkpoint number (1, 2, 3...)
+    - `timestamp` (ISO 8601 timestamp): When checkpoint was created
+    - `sections_completed_count` (integer): Number of sections completed at checkpoint
+    - `statistics_snapshot` (object): Statistics at time of checkpoint
+  - Example:
+    ```json
+    "checkpoints": [
+      {
+        "checkpoint_id": 1,
+        "timestamp": "2026-01-18T11:30:00Z",
+        "sections_completed_count": 5,
+        "statistics_snapshot": {
+          "total_requirements": 58,
+          "total_design_decisions": 12,
+          "total_questions_answered": 34,
+          "total_research_sources": 23
+        }
+      }
+    ]
+    ```
+
 ---
 
 ## Section Object Schema
@@ -397,6 +421,56 @@ This example shows:
 - 1 section in progress (03)
 - 12 sections pending (04-15)
 - Overall progress: 13.3% (2/15)
+
+---
+
+## Section 8: Validation Functions
+
+### validate_metadata_integrity(metadata)
+**Run**: After every section update, before saving
+
+```python
+def validate_metadata_integrity(metadata):
+    errors = []
+
+    # Check 1: Section ID uniqueness
+    section_ids = [s['id'] for s in metadata['sections']]
+    if len(section_ids) != len(set(section_ids)):
+        errors.append("ERROR: Duplicate section IDs")
+
+    # Check 2: File existence matches files_generated
+    for section in metadata['sections']:
+        if section['status'] == 'completed':
+            for file in section['files_generated']:
+                path = f"PRD/breakdown/{section['id']}/{file}"
+                if not file_exists(path):
+                    errors.append(f"ERROR: {path} missing")
+
+    # Check 3: Section count consistency
+    if len(metadata['sections']) != metadata['total_sections']:
+        errors.append("ERROR: Section count mismatch")
+
+    return errors or None
+```
+
+**Recovery**: If errors → prompt (1) Auto-fix, (2) Manual review, (3) Reinitialize
+
+### validate_status_constraints(metadata)
+**Checks**:
+- Max one section with status="in_progress"
+- Completed sections have completion timestamp
+- Completed sections have requirement_count > 0 (warn if 0)
+
+### validate_timestamps(metadata)
+**Checks**:
+- Valid ISO 8601 format
+- completed_at >= started_at
+- last_modified >= breakdown_started
+- No future timestamps
+
+### validate_statistics(metadata)
+**Run**: During finalization, before master-index generation
+**Checks**: Sum of section counts matches stored statistics
 
 ---
 

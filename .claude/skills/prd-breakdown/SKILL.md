@@ -14,6 +14,7 @@ description: |
   - /prd-breakdown-update <section-id>: Targeted updates to existing section
   - /prd-breakdown-redo <section-id>: Archive and restart section breakdown
   - /prd-breakdown-status: Display progress dashboard
+  - /prd-breakdown-validate <section-id>: Run quality checks on completed section
 ---
 
 # PRD Breakdown Skill
@@ -78,6 +79,16 @@ Display progress dashboard with:
 - Statistics: total requirements, design decisions, questions, research sources
 - Next action suggestion
 
+### 7. `/prd-breakdown-validate <section-id>`
+Run quality checks on completed section:
+- Example: `/prd-breakdown-validate 05-feature-specifications`
+- Validates acceptance criteria (≥2 per requirement)
+- Validates design decision rationale (≥50 chars)
+- Validates research citations (complete with URLs and dates)
+- Checks for orphaned dependencies
+- Verifies cross-reference integrity
+- Returns detailed violation report if issues found
+
 ---
 
 ## Workflow Overview
@@ -135,13 +146,19 @@ Determine if research is needed:
    - Task-based navigation (When implementing authentication, payment, etc.)
    - Open questions and future work
 
-2. **Statistics Calculation**:
+2. **Dependency Graph Generation**: Create dependency visualization with:
+   - Critical path (P0 requirements)
+   - Feature dependency chains
+   - Circular dependency detection and resolution strategies
+   - Parallelization opportunities for sprint planning
+
+3. **Statistics Calculation**:
    - Total requirements across all sections
    - Total design decisions
    - Total questions answered
    - Total research sources cited
 
-3. **Metadata Finalization**: Mark all sections as completed, record overall statistics
+4. **Metadata Finalization**: Mark all sections as completed, record overall statistics
 
 ---
 
@@ -244,6 +261,7 @@ PRD/
 ├── master-index.md                    (generated at completion)
 └── breakdown/
     ├── .metadata.json                 (progress tracking)
+    ├── dependency-graph.md            (generated at completion)
     ├── 01-executive-summary/
     │   ├── requirements.md            (always)
     │   ├── questions-answers.md       (if questions asked)
@@ -368,6 +386,7 @@ For detailed implementation guidance, see:
 - **TEMPLATES.md**: Output file templates and formatting rules
 - **METADATA_SCHEMA.md**: .metadata.json structure and validation rules
 - **RESEARCH_APPROACH.md**: Internal/external research decision tree and citation guidelines
+- **DEPENDENCY_GRAPH.md**: Dependency graph generation algorithm, circular dependency detection, and sprint planning support
 
 ---
 

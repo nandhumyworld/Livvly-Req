@@ -761,6 +761,58 @@ Focus on creator economy and monetization.
 
 ---
 
+## Requirement ID Conventions and Collision Handling
+
+### Requirement ID Format
+Format: `REQ-[ABBREV]-XXX` where:
+- `REQ` = Requirement (constant prefix)
+- `[ABBREV]` = Section abbreviation (2-3 letters)
+  - ES = Executive Summary
+  - MA = Market Analysis
+  - FS = Feature Specifications
+  - TA = Technical Architecture
+  - DB = Database Schema
+  - API = API Specifications
+  - etc.
+- `XXX` = Sequential number starting from 001
+
+### Requirement ID Collision Handling
+
+#### >999 Requirements Per Section
+**Solution**: Use alphanumeric suffix
+- REQ-FS-999 (last numeric)
+- REQ-FS-99A (first alpha)
+- REQ-FS-99B, 99C... 99Z
+- REQ-FS-98A (next base)
+
+#### Deleted/Deprecated Requirements
+**Rule**: NEVER reuse IDs
+
+**WRONG**: Delete REQ-FS-015, reuse for new requirement ✗
+**CORRECT**: Mark deprecated, use next ID ✓
+
+```markdown
+### ~~REQ-FS-015: [DEPRECATED]~~
+**Status**: Deprecated on 2026-01-20
+**Reason**: Feature removed from scope
+**Replaced By**: None
+
+### REQ-FS-046: [New Requirement]
+```
+
+**Rationale**: ID stability > sequential numbering
+
+#### Metadata Tracking
+```json
+"requirement_id_tracking": {
+  "next_available_id": 47,
+  "deprecated_ids": [15, 23],
+  "id_reassignment_forbidden": true
+}
+```
+
+---
+
 ## Example: Filled Requirements.md (First 3 Requirements)
 
 ```markdown

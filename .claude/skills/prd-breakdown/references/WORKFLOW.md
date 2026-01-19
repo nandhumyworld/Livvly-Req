@@ -79,19 +79,63 @@ def generate_section_id(title):
     return f"{number}-{slug}"
 
 def estimate_complexity(section):
-    # Simple: <100 lines
-    # Moderate: 100-300 lines
-    # Complex: >300 lines
+    """
+    Enhanced complexity estimation with multiple factors.
+    Returns: {"level": str, "time": int (minutes)}
+    """
     line_count = section['line_end'] - section['line_start']
+    section_text = extract_section_text(prd_content, section)
 
-    if section['id'] in technical_sections:
-        return "complex"  # Always complex if technical
-    elif line_count < 100:
-        return "simple"
+    # Base from line count
+    if line_count < 100:
+        base = 8
     elif line_count < 300:
-        return "moderate"
+        base = 12
     else:
-        return "complex"
+        base = 18
+
+    score = base
+
+    # Modifiers
+    if section['id'] in ['05','06','07','08']:  # Technical sections
+        score += 5
+    if count_tables(section_text) > 3:
+        score += 3  # Tables require careful parsing
+    if count_code_blocks(section_text) > 2:
+        score += 4  # Code blocks need analysis
+    if has_legal_terms(section_text):
+        score += 3  # Legal/compliance needs research
+    if count_quantitative_claims(section_text) > 5:
+        score += 2  # Data claims need validation
+    if count_competitor_mentions(section_text) > 3:
+        score += 2  # Competitor research needed
+
+    # Classify
+    if score < 10:
+        level = "simple"
+    elif score < 18:
+        level = "moderate"
+    else:
+        level = "complex"
+
+    return {"level": level, "time": score}
+
+def display_complexity_breakdown(section, complexity):
+    """
+    Show user why section has this complexity estimate
+    """
+    print(f"""
+Section: {section['title']}
+Complexity: {complexity['level'].title()} ({complexity['time']} min estimated)
+
+Factors:
+  • Line count: {section['line_end'] - section['line_start']} (+{base_score})
+  • Technical section: {is_technical} (+{5 if is_technical else 0})
+  • Tables: {table_count} (+{table_score})
+  • Code blocks: {code_count} (+{code_score})
+  • Legal terms: {legal_count} (+{legal_score})
+Total: {complexity['time']} minutes
+    """)
 ```
 
 #### Step 3: Create Directory Structure
@@ -167,11 +211,43 @@ def breakdown_section(section, prd_content, metadata):
     update_metadata_status(metadata, section['id'], 'in_progress')
     show_progress(f"Processing: {section['title']}")
 
+    # ===== PHASE 0: PRE-FLIGHT PREVIEW (OPTIONAL) =====
+    if user_config['enable_question_preview']:
+        core_questions = generate_core_questions(section, prd_content)
+        estimated_followups = estimate_followup_count(section)
+        estimated_gaps = estimate_gap_count(section)
+        total_estimated = len(core_questions) + estimated_followups + estimated_gaps
+        estimated_time = total_estimated * 1.5  # ~1.5 min per question
+
+        show_preflight_preview(section, core_questions, estimated_followups,
+                               estimated_gaps, estimated_time)
+
+        user_choice = ask_user("Options: (1) See all questions first, (2) Answer interactively, (3) Skip questions")
+
+        if user_choice == "1":
+            # Display all questions, collect all answers at once
+            all_questions = collect_all_questions_upfront(section, prd_content, core_questions)
+            all_answers = wait_for_all_answers(all_questions)
+            core_answers = all_answers['core']
+            followup_answers = all_answers['followups']
+            gap_answers = all_answers['gaps']
+            skip_to_research = True
+        elif user_choice == "3":
+            # Skip all questions, proceed with PRD only
+            core_answers = {}
+            followup_answers = {}
+            gap_answers = {}
+            skip_to_research = True
+        else:
+            # Proceed with standard interactive questioning
+            skip_to_research = False
+
     # ===== PHASE 1: CORE QUESTIONS =====
-    core_questions = generate_core_questions(section, prd_content)
-    # 2-3 questions, displayed all at once
-    show_to_user(core_questions)
-    core_answers = wait_for_answers(core_questions)
+    if not skip_to_research:
+        core_questions = generate_core_questions(section, prd_content)
+        # 2-3 questions, displayed all at once
+        show_to_user(core_questions)
+        core_answers = wait_for_answers(core_questions)
     record_answers(metadata, section['id'], 'phase_1_core', core_answers)
 
     # ===== PHASE 2: FOLLOW-UP QUESTIONS =====
@@ -778,7 +854,75 @@ def display_status():
 
 ---
 
-## Section 5: Finalization Phase
+## Section 4.5: Checkpoint Feature (Long Breakdowns)
+
+**Trigger**: Every 5 completed sections (automatic)
+
+**Actions**:
+```python
+def create_checkpoint(metadata, n):
+    # Save checkpoint metadata
+    write_json(f"PRD/breakdown/.metadata.CHECKPOINT_{n}.json", metadata)
+
+    # Generate mini master-index preview
+    preview = generate_master_index_preview(metadata)
+    write_file(f"PRD/breakdown/PREVIEW_checkpoint_{n}.md", preview)
+
+    # Display dashboard
+    show_checkpoint_dashboard(n, metadata)
+```
+
+**Dashboard**:
+```
+╔═══════════════════════════════════════════════════════╗
+║       CHECKPOINT #2 REACHED (10/15 sections)           ║
+╚═══════════════════════════════════════════════════════╝
+
+Progress: 66.7% (10/15)
+Time Elapsed: 2h 15m | Remaining: ~1h 8m
+
+Statistics: 127 reqs, 34 DDs, 89 questions, 45 sources
+
+✓ Checkpoint: .metadata.CHECKPOINT_2.json
+✓ Preview: PREVIEW_checkpoint_2.md
+
+Next: /prd-breakdown-resume or take a break
+```
+
+---
+
+## Section 5: Master Index Generation Rules
+
+### When to Generate
+
+**1. On Completion** (always)
+- Trigger: All sections completed
+- File: `PRD/breakdown/master-index.md`
+
+**2. On Status Check** (optional)
+- Trigger: `/prd-breakdown-status --with-preview`
+- File: `PRD/breakdown/PREVIEW_master-index.md`
+- Contains: Completed sections only
+
+**3. On Section Update** (conditional)
+- Trigger: `/prd-breakdown-update <section-id>` completes
+- Action: Prompt "Regenerate master-index? (y/n)"
+- Only if master-index.md already exists
+
+**4. On Checkpoint** (always)
+- Trigger: Every 5 sections
+- File: `PRD/breakdown/PREVIEW_checkpoint_{N}.md`
+
+### Master vs Preview
+
+| Feature | Master (Final) | Preview (Interim) |
+|---------|----------------|-------------------|
+| Filename | master-index.md | PREVIEW_*.md |
+| Completeness | All sections | Completed only |
+| Statistics | Final totals | Running totals |
+| Generated | On completion | On demand/checkpoints |
+
+### Finalization Phase
 
 ```
 def finalize_breakdown(metadata):
@@ -987,3 +1131,50 @@ complex_section = {
     'research_likely': True
 }
 ```
+
+---
+
+## Section 7: Comprehensive Error Handling
+
+### Network Failures During Research
+**Scenarios**: WebSearch timeout, WebFetch connection refused, rate limiting
+
+**Decision Tree**:
+```
+if web_search_fails:
+    if attempt_count < 3:
+        retry_with_exponential_backoff()
+    else:
+        log_failure(query, error_type)
+        ask_user("Research failed for [query]. Should I: (1) Skip, (2) Retry, (3) Ask you?")
+
+if skip: mark_section_research_incomplete() + add_to_open_questions()
+if retry: wait_for_user_signal() + retry_search()
+if ask: convert_research_to_question()
+```
+
+**Recovery**:
+- Log failed queries to metadata under `failed_research_queries`
+- Continue section without research
+- Mark requirements with "Research Incomplete" flag
+- Generate summary: "3 research queries failed, see open questions"
+
+### File System Errors
+**Scenarios**: Disk full, permission denied, file locked
+
+**Recovery**: Create .tmp files first, verify write, then rename
+
+### PRD Parse Errors
+**Scenarios**: Malformed markdown, no headers found, invalid line ranges
+
+**Recovery**: Offer manual section definition, validate structure
+
+### User Timeout/Abandonment
+**Scenarios**: No response for 10+ minutes during Q&A
+
+**Recovery**: Save partial progress to metadata, allow resume
+
+### Validation Failures
+**Scenarios**: Metadata integrity check fails
+
+**Recovery**: Auto-fix common issues, offer manual review, reinitialize option

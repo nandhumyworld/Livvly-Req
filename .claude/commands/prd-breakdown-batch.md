@@ -115,11 +115,36 @@ Next Steps:
 
 ---
 
-## Batch Mode Benefits
-- **Fewer context switches**: Answer all questions once, process all sections
-- **Faster overall**: ~20% time savings vs. interactive mode
-- **Better planning**: See all questions upfront before answering
-- **Flexible**: Can pause and resume between batches
+## Batch Mode: How It Works & Realistic Expectations
+
+### What IS Collected Upfront
+✓ **Core Questions Only** (2-3 per section)
+  - Clarifying ambiguous terms
+  - Validating quantitative claims
+  - Identifying constraints
+
+### What is NOT Collected Upfront
+✗ **Follow-up Questions** - Generated dynamically from core answers
+✗ **Gap Analysis Questions** - Identified after PRD + core answer analysis
+✗ **Research Validation** - Asked if research contradicts PRD
+
+### Time Savings: Reality Check
+- Upfront question collection: ~15% saved (fewer context switches)
+- Follow-ups/gaps still sequential: reduces overall to ~20% saved
+
+**Example**:
+- Interactive (3 sections): 45 min (15 min/section with switching)
+- Batch (3 sections): 36 min (12 min/section)
+
+### When Batch Shines
+✓ 5+ sections at once (compounding savings)
+✓ Dedicated 1-2 hour block
+✓ Want to see "big picture" before answering
+
+### When Interactive is Better
+✓ 1-2 sections (minimal switching overhead)
+✓ Prefer immediate context-aware follow-ups
+✓ Exploring requirements iteratively
 
 ---
 

@@ -397,6 +397,48 @@ Implementation Notes:
 
 ---
 
+## Research Summary Cards (Post-Research Display)
+
+**When**: Immediately after research phase completes
+
+**Format**:
+```
+╔═══════════════════════════════════════════════════════╗
+║      RESEARCH SUMMARY: Market Analysis                 ║
+╚═══════════════════════════════════════════════════════╝
+
+Duration: 23 min | Sources: 12 (5 internal, 7 external)
+
+┌───────────────────────────────────────────────────────┐
+│ VALIDATION RESULTS                                     │
+├────────────────────────────────────────────────────────┤
+│ ✓ Validated (5):                                      │
+│   • Competitor revenue 50-60% ✓                       │
+│   • Market size $2B India ✓                           │
+│   • DPDPA compliance reqs ✓                           │
+│                                                        │
+│ ✗ Contradicted (1):                                   │
+│   • "T+1 payout standard" → Actually 60% use T+3      │
+│     RECOMMEND: Revise to T+3 or charge premium        │
+│                                                        │
+│ ? Uncertain (2):                                      │
+│   • "10% conversion" → No data found                  │
+│     RECOMMEND: User survey needed                     │
+└────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────┐
+│ IMPACT ON REQUIREMENTS                                 │
+├────────────────────────────────────────────────────────┤
+│ Modified: 3 | Added: 2                                │
+│   • REQ-MA-008: Added competitor data                 │
+│   • REQ-MA-023: Multi-payment provider (NEW)          │
+└────────────────────────────────────────────────────────┘
+
+Press Enter to continue...
+```
+
+---
+
 ## Citation Requirements
 
 ### For Internal Research
@@ -488,6 +530,70 @@ For critical decisions or uncertain areas:
 - Don't spend more than 1 hour on single research topic
 - If still uncertain after research, flag for user clarification
 - Use time efficiently - broad strokes first, deep dive only if needed
+
+---
+
+## Research Quality Gates: "Good Enough" Criteria
+
+### Quality Gate 1: Minimum Source Threshold
+
+| Claim Type | Min Sources | Quality Required |
+|------------|-------------|------------------|
+| Market sizing | 2 | High (analyst reports, govt data) |
+| Competitor data | 3 | Medium+ (tech journalism, official sites) |
+| Technology choice | 2 | High (official docs, RFCs) |
+| Best practice | 1 | High (industry standard) |
+| Legal/compliance | 1 | High (official regulation) |
+
+**Example**:
+Query: "FRND creator revenue"
+Found: 2 high-quality sources → STOP (threshold met)
+
+### Quality Gate 2: Consistency Check
+**Rule**: If first 3 sources agree → stop. If contradict → get 2 more (max 5 total).
+
+```
+if first_3_sources_agree:
+    stop → status="validated"
+elif sources_contradict and attempt_count < 5:
+    get_2_more()
+    if majority_agrees: stop → status="validated with contradictions"
+else:
+    stop → status="uncertain - conflicting data, escalate to user"
+```
+
+### Quality Gate 3: Time Limits
+**Hard Stops**:
+- Single query: 15 min max
+- Section research: 45 min max
+- If exceeded → stop, mark "research incomplete", add to open questions
+
+**Soft Stops**:
+- Found 1 high-quality source: 5 min
+- Found 2 medium sources: 10 min
+- Found contradictions: 15 min
+
+### Quality Gate 4: Diminishing Returns
+**Rule**: Last 3 searches returned same info → stop (sufficient coverage)
+
+### Escalation: When to Ask User
+
+Escalate (instead of continuing research) if:
+1. **No credible sources** after 3 search variations
+2. **Strong contradiction** between sources and PRD
+3. **Domain expertise needed** (company-specific process)
+4. **Time limit exceeded** without resolution
+
+### Research Quality Score
+```
+Score = (Sources × Reliability × Consistency) / Time
+
+High (≥8): Multiple high-reliability, consistent, quick
+Medium (4-7): Some medium-reliability sources, more time
+Low (<4): Few low-reliability or inconsistent, lots of time
+
+If Low: Escalate to user question
+```
 
 ---
 
