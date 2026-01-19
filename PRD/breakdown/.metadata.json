@@ -1,0 +1,146 @@
+{
+  "prd_file": "LIVVLY_Voice_Dating_App_PRD.md",
+  "breakdown_started": "2026-01-19",
+  "total_sections": 15,
+  "sections_completed": 1,
+  "sections_in_progress": 0,
+  "sections_pending": 14,
+  "sections": [
+    {
+      "id": "01",
+      "title": "Executive Summary",
+      "status": "completed",
+      "files_created": 5,
+      "open_questions": 22,
+      "clarity_score": 7.5,
+      "completion_date": "2026-01-19",
+      "key_content": ["Product Overview", "Key Differentiators", "Target Market", "Business Goals"]
+    },
+    {
+      "id": "02",
+      "title": "Market Analysis",
+      "status": "pending",
+      "files_created": 0,
+      "open_questions": 0,
+      "clarity_score": 0
+    },
+    {
+      "id": "03",
+      "title": "Product Vision",
+      "status": "pending",
+      "files_created": 0,
+      "open_questions": 0,
+      "clarity_score": 0
+    },
+    {
+      "id": "04",
+      "title": "Revenue Model",
+      "status": "pending",
+      "files_created": 0,
+      "open_questions": 0,
+      "clarity_score": 0
+    },
+    {
+      "id": "05",
+      "title": "Feature Specifications",
+      "status": "pending",
+      "files_created": 0,
+      "open_questions": 0,
+      "clarity_score": 0,
+      "complexity": "high"
+    },
+    {
+      "id": "06",
+      "title": "Technical Architecture",
+      "status": "pending",
+      "files_created": 0,
+      "open_questions": 0,
+      "clarity_score": 0,
+      "complexity": "high"
+    },
+    {
+      "id": "07",
+      "title": "Database Schema",
+      "status": "pending",
+      "files_created": 0,
+      "open_questions": 0,
+      "clarity_score": 0,
+      "complexity": "high"
+    },
+    {
+      "id": "08",
+      "title": "API Specifications",
+      "status": "pending",
+      "files_created": 0,
+      "open_questions": 0,
+      "clarity_score": 0,
+      "complexity": "high"
+    },
+    {
+      "id": "09",
+      "title": "Coin Economy Design",
+      "status": "pending",
+      "files_created": 0,
+      "open_questions": 0,
+      "clarity_score": 0,
+      "complexity": "moderate"
+    },
+    {
+      "id": "10",
+      "title": "Creator Payout System",
+      "status": "pending",
+      "files_created": 0,
+      "open_questions": 0,
+      "clarity_score": 0,
+      "complexity": "moderate"
+    },
+    {
+      "id": "11",
+      "title": "N8N Automation Workflows",
+      "status": "pending",
+      "files_created": 0,
+      "open_questions": 0,
+      "clarity_score": 0,
+      "complexity": "moderate"
+    },
+    {
+      "id": "12",
+      "title": "Legal & Compliance",
+      "status": "pending",
+      "files_created": 0,
+      "open_questions": 0,
+      "clarity_score": 0
+    },
+    {
+      "id": "13",
+      "title": "Implementation Roadmap",
+      "status": "pending",
+      "files_created": 0,
+      "open_questions": 0,
+      "clarity_score": 0
+    },
+    {
+      "id": "14",
+      "title": "Cost Estimation",
+      "status": "pending",
+      "files_created": 0,
+      "open_questions": 0,
+      "clarity_score": 0
+    },
+    {
+      "id": "15",
+      "title": "Success Metrics",
+      "status": "pending",
+      "files_created": 0,
+      "open_questions": 0,
+      "clarity_score": 0
+    }
+  ],
+  "statistics": {
+    "total_files_created": 5,
+    "total_open_questions": 22,
+    "average_clarity_score": 7.5,
+    "estimated_remaining_sections": 14,
+    "priority_sections": ["05-Feature Specifications", "06-Technical Architecture", "07-Database Schema", "08-API Specifications"]
+  }
+}
