@@ -493,3 +493,189 @@ design-decisions.md → design-decisions.ARCHIVED_20260118_103000.md
 
 ### Cleanup
 After successful completion, archived files can be optionally deleted.
+
+---
+
+## Section 9: Configuration Schema
+
+The metadata file can include a `config` object for customizing skill behavior.
+
+### Configuration Object Schema
+
+```json
+{
+  "config": {
+    "base_directory": "PRD",
+    "git_integration": {
+      "enabled": true,
+      "auto_commit": true,
+      "commit_on": ["section_complete", "update", "finalize"],
+      "branch_strategy": "single",
+      "commit_message_template": "prd-breakdown: {action} - {section}"
+    },
+    "validation": {
+      "acceptance_criteria_min": 2,
+      "dd_rationale_min_chars": 50,
+      "require_research_citations": true,
+      "allow_orphaned_dependencies": false,
+      "level": "normal"
+    },
+    "changelog": {
+      "enabled": true,
+      "auto_update": true,
+      "include_statistics": true,
+      "include_diff_details": true,
+      "max_entries": 100
+    },
+    "context": {
+      "auto_learn_terminology": true,
+      "persist_clarifications": true,
+      "share_across_sessions": true
+    },
+    "abbreviation_overrides": {
+      "User Analytics": "UA",
+      "Security Audit": "SA"
+    }
+  }
+}
+```
+
+### Configuration Fields
+
+#### base_directory
+- **Type**: string
+- **Default**: "PRD"
+- **Description**: Base directory for PRD files and breakdown output
+
+#### git_integration
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| enabled | boolean | true | Enable/disable git integration |
+| auto_commit | boolean | true | Automatically commit after triggers |
+| commit_on | array | ["section_complete"] | When to create commits |
+| branch_strategy | string | "single" | "single", "per-section", or "feature" |
+| commit_message_template | string | see above | Template for commit messages |
+
+#### validation
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| acceptance_criteria_min | integer | 2 | Minimum acceptance criteria per requirement |
+| dd_rationale_min_chars | integer | 50 | Minimum characters for DD rationale |
+| require_research_citations | boolean | true | Require complete citations |
+| allow_orphaned_dependencies | boolean | false | Allow missing dependency targets |
+| level | string | "normal" | "strict", "normal", or "loose" |
+
+#### changelog
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| enabled | boolean | true | Enable/disable changelog |
+| auto_update | boolean | true | Auto-update on changes |
+| include_statistics | boolean | true | Include running statistics |
+| include_diff_details | boolean | true | Include detailed diffs |
+| max_entries | integer | 100 | Max entries before archiving |
+
+#### context
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| auto_learn_terminology | boolean | true | Automatically add terms to context |
+| persist_clarifications | boolean | true | Save Q&A clarifications |
+| share_across_sessions | boolean | true | Reuse context in future sessions |
+
+#### abbreviation_overrides
+- **Type**: object (string → string)
+- **Default**: {}
+- **Description**: Custom abbreviations for section names not in predefined list
+
+---
+
+## Section 10: Dynamic Section Handling
+
+The skill supports PRDs with any number of sections, not just the documented 15.
+
+### Section Detection Algorithm
+
+```python
+def detect_sections(prd_content):
+    """Detect sections from PRD headers"""
+
+    sections = []
+    lines = prd_content.split('\n')
+
+    for i, line in enumerate(lines):
+        # Match top-level headers: # Title
+        if line.startswith('# ') and not line.startswith('## '):
+            title = line[2:].strip()
+            sections.append({
+                'title': title,
+                'line_start': i,
+                'id': generate_section_id(title, len(sections) + 1),
+                'abbreviation': generate_abbreviation(title)
+            })
+
+    # Calculate line_end for each section
+    for i, section in enumerate(sections):
+        if i + 1 < len(sections):
+            section['line_end'] = sections[i + 1]['line_start'] - 1
+        else:
+            section['line_end'] = len(lines) - 1
+
+    return sections
+```
+
+### Abbreviation Generation
+
+```python
+def generate_abbreviation(title):
+    """Generate section abbreviation"""
+
+    # Check predefined abbreviations
+    predefined = {
+        'Executive Summary': 'ES',
+        'Market Analysis': 'MA',
+        'Product Vision': 'PV',
+        # ... etc
+    }
+
+    if title in predefined:
+        return predefined[title]
+
+    # Check config overrides
+    if title in config.get('abbreviation_overrides', {}):
+        return config['abbreviation_overrides'][title]
+
+    # Auto-generate from title
+    words = [w for w in title.split() if len(w) > 2]
+
+    if len(words) == 1:
+        return words[0][:3].upper()
+    elif len(words) == 2:
+        return (words[0][0] + words[1][0]).upper()
+    else:
+        return ''.join(w[0] for w in words[:3]).upper()
+```
+
+### Section Type Detection
+
+```python
+def detect_section_type(title, content):
+    """Detect if section is business, technical, implementation, or operational"""
+
+    technical_keywords = ['architecture', 'database', 'api', 'schema', 'technical', 'specification']
+    business_keywords = ['executive', 'market', 'vision', 'revenue', 'metrics', 'analysis']
+    implementation_keywords = ['roadmap', 'timeline', 'cost', 'workflow', 'automation', 'payout']
+    operational_keywords = ['legal', 'compliance', 'security', 'audit']
+
+    title_lower = title.lower()
+
+    if any(kw in title_lower for kw in technical_keywords):
+        return 'technical'
+    elif any(kw in title_lower for kw in business_keywords):
+        return 'business'
+    elif any(kw in title_lower for kw in implementation_keywords):
+        return 'implementation'
+    elif any(kw in title_lower for kw in operational_keywords):
+        return 'operational'
+    else:
+        # Default based on content analysis
+        return analyze_content_for_type(content)
+```

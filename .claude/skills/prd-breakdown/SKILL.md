@@ -15,6 +15,7 @@ description: |
   - /prd-breakdown-redo <section-id>: Archive and restart section breakdown
   - /prd-breakdown-status: Display progress dashboard
   - /prd-breakdown-validate <section-id>: Run quality checks on completed section
+  - /prd-breakdown-export <format>: Export to JSON, CSV, Jira, Linear, Markdown, or HTML
 ---
 
 # PRD Breakdown Skill
@@ -88,18 +89,32 @@ Run quality checks on completed section:
 - Checks for orphaned dependencies
 - Verifies cross-reference integrity
 - Returns detailed violation report if issues found
+- Configurable validation thresholds (see METADATA_SCHEMA.md)
+
+### 8. `/prd-breakdown-export <format>`
+Export breakdown results to various formats:
+- Example: `/prd-breakdown-export jira --sections 05,06`
+- **Formats**: json, csv, jira, linear, markdown, html
+- **Options**:
+  - `--sections`: Specific sections to export (default: all)
+  - `--include`: What to include (requirements, decisions, research, all)
+  - `--output`: Custom output path
+- Creates export files in `PRD/breakdown/exports/`
 
 ---
 
 ## Workflow Overview
 
 ### Phase 1: Initialization
-1. **Locate PRD**: Search PRD/ directory or ask user for path
+1. **Locate PRD**: Search PRD/ directory or ask user for path (configurable base directory)
 2. **Parse Structure**: Extract headers and determine section boundaries with line ranges
+   - Handles any number of sections (not limited to 15)
+   - Auto-generates abbreviations for unknown section types
 3. **Estimate Complexity**: Classify each section (simple, moderate, complex)
 4. **Create Infrastructure**:
    - Create `PRD/breakdown/` directory
    - Initialize `.metadata.json` with all sections set to "pending"
+   - Initialize `context.json` with project domain, terminology, and preferences
 5. **Present Overview**: Show user total sections and estimated time, get confirmation
 
 ### Phase 2: Section Breakdown Loop (Core Algorithm)
@@ -225,7 +240,7 @@ Review PRD text and answers for assumptions and gaps:
 - REQ-MA-008 (Market Analysis, requirement #8)
 - REQ-TA-012 (Technical Architecture, requirement #12)
 
-**Section Abbreviations**:
+**Section Abbreviations** (predefined):
 - ES: Executive Summary
 - MA: Market Analysis
 - PV: Product Vision
@@ -241,6 +256,8 @@ Review PRD text and answers for assumptions and gaps:
 - IR: Implementation Roadmap
 - COE: Cost Estimation
 - SM: Success Metrics
+
+**Auto-generated Abbreviations**: For sections not in the predefined list, abbreviations are generated from the first 2-3 letters of significant words (e.g., "User Analytics" → "UA", "Security Audit" → "SA").
 
 ### Design Decision ID Format
 `DD-{SECTION_ABBREV}-{NUM}` (zero-padded to 3 digits)
@@ -261,7 +278,14 @@ PRD/
 ├── master-index.md                    (generated at completion)
 └── breakdown/
     ├── .metadata.json                 (progress tracking)
+    ├── context.json                   (project context & terminology)
+    ├── CHANGELOG.md                   (change history)
+    ├── conflicts.json                 (conflict tracking)
     ├── dependency-graph.md            (generated at completion)
+    ├── exports/                       (export outputs)
+    │   ├── breakdown_export.json
+    │   ├── jira_import.csv
+    │   └── ...
     ├── 01-executive-summary/
     │   ├── requirements.md            (always)
     │   ├── questions-answers.md       (if questions asked)
@@ -279,16 +303,7 @@ PRD/
     ├── 06-technical-architecture/
     ├── 07-database-schema/
     ├── 08-api-specifications/
-    ├── 09-coin-economy/
-    ├── 10-creator-payout/
-    ├── 11-automation-workflows/
-    ├── 12-legal-compliance/
-    ├── 13-implementation-roadmap/
-    ├── 14-cost-estimation/
-    ├── 02-market-analysis/
-    ├── 03-product-vision/
-    ├── 04-revenue-model/
-    └── 15-success-metrics/
+    └── [additional sections...]       (dynamic based on PRD)
 ```
 
 ---
@@ -381,12 +396,23 @@ Don't create files with empty content:
 
 For detailed implementation guidance, see:
 
+### Core Documentation
 - **WORKFLOW.md**: Complete workflows with pseudo-code and command handling logic
 - **QUESTION_STRATEGIES.md**: Section-specific question templates and patterns
 - **TEMPLATES.md**: Output file templates and formatting rules
 - **METADATA_SCHEMA.md**: .metadata.json structure and validation rules
 - **RESEARCH_APPROACH.md**: Internal/external research decision tree and citation guidelines
 - **DEPENDENCY_GRAPH.md**: Dependency graph generation algorithm, circular dependency detection, and sprint planning support
+
+### Advanced Features
+- **CONTEXT_PERSISTENCE.md**: User context management for cross-session consistency
+- **CONFLICT_RESOLUTION.md**: Strategy for detecting and resolving requirement conflicts
+- **GIT_INTEGRATION.md**: Version control integration for change tracking
+- **CHANGELOG_GENERATION.md**: Automatic changelog for tracking modifications
+
+### Getting Started
+- **QUICK_START.md**: 5-minute quick start guide
+- **FAQ.md**: Frequently asked questions and common patterns
 
 ---
 
@@ -442,3 +468,34 @@ Skill: Conducting research on competitor payout systems...
 4. Use `/prd-breakdown-batch` for faster multi-section processing
 5. Use `/prd-breakdown-update <section-id>` to modify sections
 6. Use `/prd-breakdown-redo <section-id>` to restart a section
+7. Use `/prd-breakdown-validate <section-id>` to check quality
+8. Use `/prd-breakdown-export <format>` to export for external tools
+
+---
+
+## Configuration Options
+
+The skill supports various configuration options in `.metadata.json`:
+
+```json
+{
+  "config": {
+    "base_directory": "PRD",
+    "git_integration": {
+      "enabled": true,
+      "auto_commit": true
+    },
+    "validation": {
+      "acceptance_criteria_min": 2,
+      "dd_rationale_min_chars": 50,
+      "require_research_citations": true
+    },
+    "changelog": {
+      "enabled": true,
+      "auto_update": true
+    }
+  }
+}
+```
+
+See **METADATA_SCHEMA.md** for complete configuration options.
