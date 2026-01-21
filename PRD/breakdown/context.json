@@ -46,11 +46,13 @@
   },
   "technical_context": {
     "platform": "Mobile (Android primary, iOS secondary)",
-    "backend": "Supabase",
-    "realtime": "WebRTC for voice/video",
+    "mobile_framework": "Flutter 3.x",
+    "backend": "Node.js + Supabase (BaaS)",
+    "database": "PostgreSQL (via Supabase)",
+    "realtime": "Agora SDK for voice/video, Supabase Realtime for data",
     "payments": "Razorpay",
-    "automation": "N8N workflows",
-    "ai_features": "AI companion integration"
+    "automation": "Direct implementation for MVP, n8n deferred to Phase 2",
+    "ai_features": "AI companion integration (Phase 2)"
   },
   "competitors": {
     "direct": ["FRND", "Connecto", "Dost"],
@@ -79,6 +81,11 @@
   "notes": [
     "MVP scope: Phase 1 (0-6 months) targeting 50K users and ₹20L GMV",
     "AI Companion: Deferred to Phase 2 - launch with human creators only",
-    "Agency Model: Required for MVP - need agency onboarding and commission tracking from day one"
+    "Agency Model: Required for MVP - need agency onboarding and commission tracking from day one",
+    "Live Voice Rooms: Included in MVP (upgraded from Phase 2)",
+    "Video Calls: Included in MVP (upgraded from Phase 2)",
+    "Chat: 1-to-1 messaging + room chat included in MVP",
+    "Backend: Node.js + Supabase (changed from FastAPI)",
+    "Automation: n8n deferred to Phase 2 - critical automations built directly"
   ]
 }
