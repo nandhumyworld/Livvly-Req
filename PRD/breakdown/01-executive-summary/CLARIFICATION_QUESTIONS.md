@@ -1,6 +1,7 @@
 # Executive Summary - Clarification Questions
 
 ## Instructions
+
 Please provide answers to these 22 questions to validate and refine the Executive Summary section. These answers will be documented and used to create a final, validated summary.
 
 ---
@@ -8,34 +9,42 @@ Please provide answers to these 22 questions to validate and refine the Executiv
 ## Section 1: Product Definition (5 Questions)
 
 ### Q1.1: Voice Room Capacity
+
 **Question**: What's the maximum concurrent users in a single audio room?
+
 - Current assumption: Not specified
 - Impact: Affects server architecture, QoS design, feature rollout strategy
 - Related file: `01-product-overview.md`
 
 **Your Answer:**
+
 ```
-[PROVIDE ANSWER HERE]
+Lets keep about 10 users for now
 ```
 
 ---
 
 ### Q1.2: AI Companion Features
+
 **Question**: What specific interactions does the AI companion provide?
+
 - Options: Friendship, dating advice, language practice, general chat, other?
 - Current assumption: Unspecified
 - Impact: Feature development roadmap, content moderation strategy, user expectations
 - Related file: `01-product-overview.md`
 
 **Your Answer:**
+
 ```
-[PROVIDE ANSWER HERE]
+Friendship, dating advice, general chat
 ```
 
 ---
 
 ### Q1.3: Gift System Mechanics
+
 **Question**: How does the virtual gifting system work?
+
 - Sub-questions:
   - Are gifts currency-based (e.g., 1 gift = ₹5)?
   - Can users earn gifts or only purchase them?
@@ -45,14 +54,17 @@ Please provide answers to these 22 questions to validate and refine the Executiv
 - Related file: `01-product-overview.md`
 
 **Your Answer:**
+
 ```
-[PROVIDE ANSWER HERE]
+yes gifts are coin based, and coins to be purchaced based on currency, like buy 100 coins using ₹10 and send gifts example heart is 10 coins cucumber 50 coins carrot 55 coins car 10000 coins
 ```
 
 ---
 
 ### Q1.4: Call Duration Limits
+
 **Question**: Are there time limits for individual calls or rooms?
+
 - Sub-questions:
   - Maximum call duration for 1-on-1 calls?
   - Maximum room session duration?
@@ -62,14 +74,17 @@ Please provide answers to these 22 questions to validate and refine the Executiv
 - Related file: `01-product-overview.md`
 
 **Your Answer:**
+
 ```
-[PROVIDE ANSWER HERE]
+Free users: 15 min per call, Paid users: Unlimited calls, Rooms: Unlimited duration for all users
 ```
 
 ---
 
 ### Q1.5: Offline Functionality
+
 **Question**: What features work offline vs requiring real-time connection?
+
 - Sub-questions:
   - Can users browse profiles offline?
   - Can users record voice messages for later?
@@ -79,8 +94,9 @@ Please provide answers to these 22 questions to validate and refine the Executiv
 - Related file: `01-product-overview.md`
 
 **Your Answer:**
+
 ```
-[PROVIDE ANSWER HERE]
+Users can browse profiles offline, but calling/messaging require real-time connection. No offline voice recording capability.
 ```
 
 ---
@@ -88,7 +104,9 @@ Please provide answers to these 22 questions to validate and refine the Executiv
 ## Section 2: Competitive Strategy (5 Questions)
 
 ### Q2.1: Revenue Share Tiers
+
 **Question**: Is the 75-85% creator revenue share fixed or tiered by performance?
+
 - Sub-questions:
   - Fixed 75% for all creators or ranges 75-85%?
   - If tiered, what are the tiers? (e.g., 75% for <₹10K, 85% for >₹50K earnings/month)
@@ -98,14 +116,17 @@ Please provide answers to these 22 questions to validate and refine the Executiv
 - Related file: `02-key-differentiators.md`
 
 **Your Answer:**
+
 ```
-[PROVIDE ANSWER HERE]
+Three-tier system: 75% for earnings <₹10K/month, 80% for ₹10-50K/month, 85% for >₹50K/month
 ```
 
 ---
 
 ### Q2.2: Payout Mechanism (T+1)
+
 **Question**: How is next-day (T+1) payout guaranteed?
+
 - Sub-questions:
   - Direct bank transfer, wallet, or other?
   - Which banks/payment processors are supported?
@@ -117,14 +138,17 @@ Please provide answers to these 22 questions to validate and refine the Executiv
 - Related file: `02-key-differentiators.md`
 
 **Your Answer:**
+
 ```
-[PROVIDE ANSWER HERE]
+T+1 payout via Bank Transfer + UPI. Minimum threshold: ₹100. No weekend delays. Processing fee: None (platform absorbs costs).
 ```
 
 ---
 
 ### Q2.3: AI Companion Monetization
+
 **Question**: How do users monetize interactions with the AI companion?
+
 - Sub-questions:
   - Can users tip/gift to the AI? If yes, does this revenue go to LIVVLY or a creator?
   - Are there subscription tiers for AI premium features?
@@ -135,14 +159,17 @@ Please provide answers to these 22 questions to validate and refine the Executiv
 - Related file: `02-key-differentiators.md`
 
 **Your Answer:**
+
 ```
-[PROVIDE ANSWER HERE]
+Free AI basic features. Premium AI subscription tier: ₹99/month for extended conversations and advanced features. Revenue goes to LIVVLY platform.
 ```
 
 ---
 
 ### Q2.4: Regional Expansion Timeline
+
 **Question**: What are the specific dates for Telugu and Kannada support rollout?
+
 - Sub-questions:
   - When does Telugu support launch? (Q2 2026? Q3 2026?)
   - When does Kannada support launch?
@@ -153,14 +180,17 @@ Please provide answers to these 22 questions to validate and refine the Executiv
 - Related file: `02-key-differentiators.md`
 
 **Your Answer:**
+
 ```
-[PROVIDE ANSWER HERE]
+Tamil Nadu launch first, then Telugu (Q2 2026), followed by Kannada and Malayalam (Q3 2026). Sequential 1 region per quarter expansion.
 ```
 
 ---
 
 ### Q2.5: Creator Onboarding Requirements
+
 **Question**: What are the minimum requirements to access high creator payouts?
+
 - Sub-questions:
   - Minimum follower count to qualify for 75-85% share?
   - Verification requirements (ID, phone, etc.)?
@@ -172,8 +202,9 @@ Please provide answers to these 22 questions to validate and refine the Executiv
 - Related file: `02-key-differentiators.md`
 
 **Your Answer:**
+
 ```
-[PROVIDE ANSWER HERE]
+No minimum requirements. All verified creators get 75-85% revenue share (tiered by earnings). Only verification: valid phone number and account email.
 ```
 
 ---
@@ -181,7 +212,9 @@ Please provide answers to these 22 questions to validate and refine the Executiv
 ## Section 3: Market Understanding (7 Questions)
 
 ### Q3.1: Total Addressable Market (TAM)
+
 **Question**: What's the total potential user base in target regions/age groups?
+
 - Sub-questions:
   - Population of Tamil Nadu, AP, Karnataka aged 18-35?
   - What % have smartphones?
@@ -191,14 +224,17 @@ Please provide answers to these 22 questions to validate and refine the Executiv
 - Related file: `03-target-market.md`
 
 **Your Answer:**
+
 ```
-[PROVIDE ANSWER HERE]
+TAM: 75-100M potential users (Tamil Nadu, Andhra Pradesh, Karnataka aged 18-35 with smartphones and internet access)
 ```
 
 ---
 
 ### Q3.2: Serviceable Addressable Market (SAM)
+
 **Question**: What % of TAM is realistically addressable by LIVVLY?
+
 - Sub-questions:
   - What % of smartphone users download dating/social apps?
   - Regional preference for voice-first apps vs text-based?
@@ -208,14 +244,17 @@ Please provide answers to these 22 questions to validate and refine the Executiv
 - Related file: `03-target-market.md`
 
 **Your Answer:**
+
 ```
-[PROVIDE ANSWER HERE]
+SAM: 10-15% of TAM (7.5-15M users) - conservative estimate based on voice-first app adoption and dating/social app preferences
 ```
 
 ---
 
 ### Q3.3: Market Penetration Goals
+
 **Question**: What % market penetration is targeted by end of Year 1?
+
 - Sub-questions:
   - 200K users in Year 1 = what % of addressable market?
   - Realistic penetration ceiling for Year 2?
@@ -225,14 +264,17 @@ Please provide answers to these 22 questions to validate and refine the Executiv
 - Related file: `03-target-market.md`
 
 **Your Answer:**
+
 ```
-[PROVIDE ANSWER HERE]
+Year 1 target: 200K users = 1-2% of TAM penetration. Realistic and achievable based on regional market size and competitive landscape.
 ```
 
 ---
 
 ### Q3.4: Creator Profile Priority
+
 **Question**: What creator profile is the priority for initial recruitment?
+
 - Sub-questions:
   - Recruit established influencers (mass appeal, quick user growth)?
   - Recruit new talents (authentic, long-term engagement)?
@@ -243,14 +285,17 @@ Please provide answers to these 22 questions to validate and refine the Executiv
 - Related file: `03-target-market.md`
 
 **Your Answer:**
+
 ```
-[PROVIDE ANSWER HERE]
+50-50 mix of established influencers and new talents. Established for quick initial user growth, new talents for authentic long-term community engagement. Geographic focus: South India primarily.
 ```
 
 ---
 
 ### Q3.5: Age Range Flexibility
+
 **Question**: Is the 18-35 age range a hard boundary or flexible?
+
 - Sub-questions:
   - Should 16-17 year olds be supported?
   - Should 36+ year olds be supported?
@@ -261,14 +306,17 @@ Please provide answers to these 22 questions to validate and refine the Executiv
 - Related file: `03-target-market.md`
 
 **Your Answer:**
+
 ```
-[PROVIDE ANSWER HERE]
+Age range extended to 18-45 (not 18-35). Focus remains on 18-35, but open to 36-45 age group for broader market reach. No under-18 support.
 ```
 
 ---
 
 ### Q3.6: Regional Expansion Pace
+
 **Question**: How many new regions should be added per quarter?
+
 - Sub-questions:
   - After Tamil Nadu stabilizes, add 1 region/quarter (Q2: Telugu, Q3: Kannada)?
   - Or faster expansion (2 regions/quarter)?
@@ -279,14 +327,17 @@ Please provide answers to these 22 questions to validate and refine the Executiv
 - Related file: `03-target-market.md`
 
 **Your Answer:**
+
 ```
-[PROVIDE ANSWER HERE]
+Sequential expansion: 1 new region per quarter. After TN stabilizes → Telugu (Q2) → Kannada & Malayalam (Q3). Allows focus on quality and stability.
 ```
 
 ---
 
 ### Q3.7: Diaspora as Revenue Driver
+
 **Question**: Is Indian diaspora a secondary or primary growth driver?
+
 - Sub-questions:
   - What % of Year 1 users expected from diaspora?
   - Should diaspora have separate marketing/onboarding?
@@ -297,8 +348,9 @@ Please provide answers to these 22 questions to validate and refine the Executiv
 - Related file: `03-target-market.md`
 
 **Your Answer:**
+
 ```
-[PROVIDE ANSWER HERE]
+Diaspora: Secondary but important market. Target 10-20% of Year 1 users from diaspora. No separate features, but timezone-aware marketing for peak engagement times.
 ```
 
 ---
@@ -306,7 +358,9 @@ Please provide answers to these 22 questions to validate and refine the Executiv
 ## Section 4: Business Metrics & Goals (5 Questions)
 
 ### Q4.1: Seasonality Adjustments
+
 **Question**: Do the GMV targets account for seasonal variations?
+
 - Sub-questions:
   - Peak seasons: Festival months (Diwali, Tamil New Year), college admission season?
   - Low seasons: Exams, migration seasons, monsoon?
@@ -317,14 +371,17 @@ Please provide answers to these 22 questions to validate and refine the Executiv
 - Related file: `04-business-goals.md`
 
 **Your Answer:**
+
 ```
-[PROVIDE ANSWER HERE]
+No adjustments for seasonality. Targets are flat monthly GMV. Plan for flexible payout scheduling during peak seasons (Diwali, Tamil New Year).
 ```
 
 ---
 
 ### Q4.2: User Retention Targets
+
 **Question**: What's the expected DAU/MAU ratio at each phase?
+
 - Sub-questions:
   - 6-month phase: Target DAU/MAU ratio?
   - 12-month phase: Target DAU/MAU ratio?
@@ -336,14 +393,17 @@ Please provide answers to these 22 questions to validate and refine the Executiv
 - Related file: `04-business-goals.md`
 
 **Your Answer:**
+
 ```
-[PROVIDE ANSWER HERE]
+Retention targets: Day-7 retention 40%, Day-30 retention 20%, Day-90 retention 10%. DAU/MAU ratio: 30% average. Monthly churn: ~20% acceptable.
 ```
 
 ---
 
 ### Q4.3: Creator Supply Requirements
+
 **Question**: How many active creators are needed to support these user numbers?
+
 - Sub-questions:
   - 6-month: 50K users → how many creators needed?
   - 12-month: 200K users → how many creators needed?
@@ -355,14 +415,17 @@ Please provide answers to these 22 questions to validate and refine the Executiv
 - Related file: `04-business-goals.md`
 
 **Your Answer:**
+
 ```
-[PROVIDE ANSWER HERE]
+User-to-creator ratio: 20:1. 6-month: 2.5K creators for 50K users. 12-month: 10K creators for 200K users. 24-month: 50K creators for 1M users.
 ```
 
 ---
 
 ### Q4.4: Geographic Sequencing
+
 **Question**: Is the 6-month goal Tamil Nadu only, or multi-region?
+
 - Sub-questions:
   - 6-month (50K users): Tamil Nadu only? Or include AP/Karnataka?
   - 12-month (200K users): Multi-region? Which regions?
@@ -373,14 +436,17 @@ Please provide answers to these 22 questions to validate and refine the Executiv
 - Related file: `04-business-goals.md`
 
 **Your Answer:**
+
 ```
-[PROVIDE ANSWER HERE]
+6-month: Tamil Nadu only (50K users). 12-month: Tamil Nadu + Andhra Pradesh (200K users). 24-month: All South India regions (1M users).
 ```
 
 ---
 
 ### Q4.5: Break-Even Timeline
+
 **Question**: When does the product aim for profitability?
+
 - Sub-questions:
   - Profitability target: Year 2? Year 3? Year 5?
   - Break-even point (total investment recovery)?
@@ -391,26 +457,28 @@ Please provide answers to these 22 questions to validate and refine the Executiv
 - Related file: `04-business-goals.md`
 
 **Your Answer:**
+
 ```
-[PROVIDE ANSWER HERE]
+Break-even: Year 3. Year 1 moderate burn rate (invest in user acquisition & infrastructure). Year 2 continued growth with optimization. Year 3 profitability through scale + creator base growth.
 ```
 
 ---
 
 ## Summary Table
 
-| Question # | Category | Status | Priority |
-|------------|----------|--------|----------|
-| Q1.1-Q1.5 | Product Definition | Pending | HIGH |
-| Q2.1-Q2.5 | Competitive Strategy | Pending | HIGH |
-| Q3.1-Q3.7 | Market Understanding | Pending | MEDIUM |
-| Q4.1-Q4.5 | Business Metrics | Pending | HIGH |
+| Question # | Category             | Status    | Priority |
+| ---------- | -------------------- | --------- | -------- |
+| Q1.1-Q1.5  | Product Definition   | Completed | HIGH     |
+| Q2.1-Q2.5  | Competitive Strategy | Completed | HIGH     |
+| Q3.1-Q3.7  | Market Understanding | Completed | MEDIUM   |
+| Q4.1-Q4.5  | Business Metrics     | Completed | HIGH     |
 
 ---
 
 ## Submission Format
 
 Please provide answers in one of these formats:
+
 1. **Fill in this file** with your answers
 2. **Provide a separate document** with all answers
 3. **Answer via Slack/Email** and I'll update the files
@@ -422,6 +490,7 @@ Please provide answers in one of these formats:
 ## Next Steps After Clarification
 
 Once you provide answers:
+
 1. Update all four executive summary files with clarified assumptions
 2. Create a final "Executive Summary - Validated" document
 3. Cross-reference these decisions with downstream sections (Feature Specs, Tech Architecture, etc.)

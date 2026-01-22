@@ -11,7 +11,10 @@
       "mcp__plugin_serena_serena__activate_project",
       "mcp__plugin_serena_serena__check_onboarding_performed",
       "mcp__plugin_serena_serena__list_dir",
-      "Bash(echo:*)"
+      "Bash(echo:*)",
+      "Skill(prd-breakdown-resume)",
+      "Bash(ls -la \"C:\\\\Users\\\\NANDHU\\\\Documents\\\\SocialEagle\\\\GenAI-Batch1\\\\ClaudeCodeSpace\\\\Livvly-Req\\\\PRD\\\\breakdown\\\\05-feature-specifications\"\" 2>&1 || dir \"C:UsersNANDHUDocumentsSocialEagleGenAI-Batch1ClaudeCodeSpaceLivvly-ReqPRDbreakdown05-feature-specifications\"\")",
+      "Bash(findstr:*)"
     ]
   },
   "enabledPlugins": {
