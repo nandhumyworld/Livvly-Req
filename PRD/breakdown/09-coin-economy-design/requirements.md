@@ -3,9 +3,13 @@
 **Section:** Coin Economy Design
 **Total Requirements:** 10
 **Priority Breakdown:** P0: 6 | P1: 3 | P2: 1
-**Last Updated:** 2026-01-20
+**Last Updated:** 2026-01-24
 
-**CRITICAL CORRECTIONS:** All revenue calculations updated from PRD's 45% to approved 75-85% tiered model
+**CRITICAL UPDATES:**
+- Dual revenue model: 75-85% tiered for calls, 45% for gifts
+- 6 coin packages (restored ₹49 package per user decision)
+- 10 gifts (PRD catalog, removed previous mid-tier additions)
+- Daily login bonus added (5 coins/day)
 
 ---
 
@@ -16,7 +20,7 @@
 **Status:** Approved
 
 **Description:**
-Implement 5 coin packages (₹99 - ₹1999) with progressive bonus incentives, starting at ₹99 minimum (NO ₹49 package per approved REQ-RM-004).
+Implement 6 coin packages (₹49 - ₹1999) with progressive bonus incentives per PRD Section 9.1, including entry-level ₹49 package for trial users.
 
 **Specifications:**
 
@@ -24,49 +28,53 @@ Implement 5 coin packages (₹99 - ₹1999) with progressive bonus incentives, s
 
 | Package | Price (₹) | Base Coins | Bonus | Total | Per Coin | Discount |
 |---------|-----------|------------|-------|-------|----------|----------|
-| Popular ⭐ | ₹99 | 95 | +15 | 110 | ₹0.90 | 10% |
-| Value | ₹299 | 280 | +70 | 350 | ₹0.85 | 15% |
-| Best Seller 🔥 | ₹499 | 460 | +140 | 600 | ₹0.83 | 17% |
-| Premium | ₹999 | 900 | +400 | 1300 | ₹0.77 | 23% |
-| VIP | ₹1999 | 1750 | +1050 | 2800 | ₹0.71 | 29% |
+| Starter | ₹49 | 45 | +5 | 50 | ₹0.98 | 2% |
+| Popular ⭐ | ₹99 | 90 | +10 | 100 | ₹0.99 | 1% |
+| Value | ₹299 | 270 | +30 | 300 | ₹1.00 | 0% |
+| Best Seller 🔥 | ₹499 | 450 | +50 | 500 | ₹1.00 | 0% |
+| Premium | ₹999 | 900 | +100 | 1000 | ₹1.00 | 0% |
+| VIP | ₹1999 | 1800 | +200 | 2000 | ₹1.00 | 0% |
 
-**Note:** PRD's ₹49 Starter package removed per user decision (aligns with REQ-RM-004)
+**Note:** Updated to match PRD Section 9.1 per user decision (Q4: "Keep PRD packages")
 
 **Database Implementation:**
 ```sql
 -- coin_packages table (from REQ-DB-006)
 INSERT INTO coin_packages (name, price_inr, base_coins, bonus_coins, sort_order, is_active) VALUES
-('Popular', 99.00, 95, 15, 1, true),
-('Value', 299.00, 280, 70, 2, true),
-('Best Seller', 499.00, 460, 140, 3, true),
-('Premium', 999.00, 900, 400, 4, true),
-('VIP', 1999.00, 1750, 1050, 5, true);
+('Starter', 49.00, 45, 5, 1, true),
+('Popular', 99.00, 90, 10, 2, true),
+('Value', 299.00, 270, 30, 3, true),
+('Best Seller', 499.00, 450, 50, 4, true),
+('Premium', 999.00, 900, 100, 5, true),
+('VIP', 1999.00, 1800, 200, 6, true);
 ```
 
 **Bonus Calculation Formula:**
 ```
-Bonus Percentage = (Discount % / (100% - Discount %)) × 100
+Bonus = Base Coins × Bonus Percentage
 
-Examples:
-- ₹99: 10% discount → 11% bonus (95 + 15 = 110)
-- ₹1999: 29% discount → 60% bonus (1750 + 1050 = 2800)
+Examples (from PRD):
+- ₹49: 10% bonus (45 + 5 = 50)
+- ₹99: 10% bonus (90 + 10 = 100)
+- ₹1999: 10% bonus (1800 + 200 = 2000)
 ```
 
 **Package Recommendations:**
-- **Popular (₹99)**: Default selection, first-time users
-- **Value (₹299)**: Good balance of price and bonus
+- **Starter (₹49)**: Entry-level, trial package for new users
+- **Popular (₹99)**: Default selection, first-time purchasers
+- **Value (₹299)**: Good balance of price and value
 - **Best Seller (₹499)**: Recommended badge, most popular
 - **Premium (₹999)**: High-value users, serious daters
 - **VIP (₹1999)**: Whales, top spenders
 
 **Rationale:**
-Progressive bonuses incentivize larger purchases. Starting at ₹99 balances accessibility with transaction value. Removes ₹49 package to maintain approved minimum.
+₹49 entry package lowers barrier to entry for trial users. Consistent 10% bonus across all packages simplifies pricing. Matches PRD Section 9.1 exactly per user decision.
 
 **Acceptance Criteria:**
-- [ ] 5 coin packages (₹99, ₹299, ₹499, ₹999, ₹1999)
-- [ ] No ₹49 package (aligns with REQ-RM-004)
-- [ ] Bonus coins calculated correctly (10%-60%)
-- [ ] coin_packages seed data matches approved structure
+- [ ] 6 coin packages (₹49, ₹99, ₹299, ₹499, ₹999, ₹1999)
+- [ ] ₹49 Starter package included (entry-level trial)
+- [ ] Bonus coins calculated correctly (10% bonus for all)
+- [ ] coin_packages seed data matches PRD structure
 - [ ] Mobile app shows badges (⭐ Popular, 🔥 Best Seller)
 - [ ] Per-coin pricing displayed for transparency
 
@@ -91,30 +99,22 @@ Progressive bonuses incentivize larger purchases. Starting at ₹99 balances acc
 
 ---
 
-## REQ-CE-002: Corrected Revenue Split Formula (CRITICAL FIX)
+## REQ-CE-002: Dual Revenue Split Model (CRITICAL UPDATE)
 
 **Priority:** P0
 **Type:** Financial Requirement
 **Status:** Approved
 
 **Description:**
-**CRITICAL CORRECTION:** Implement 75-85% tiered creator revenue share (NOT PRD's 45%) across all coin spending (calls, gifts, rooms). This fixes the PRD error in Section 9.4.
+Implement DUAL revenue model: 75-85% tiered creator share for calls/rooms, 45% fixed creator share for gifts only. Balances creator earnings on calls with platform sustainability on gift monetization.
 
 **Specifications:**
 
-**Corrected Conversion Formula:**
+**Dual Revenue Model:**
 
-**PRD Section 9.4 ERROR (Lines 1984-1987):**
+**For Calls & Rooms (75-85% Tiered Model):**
 ```
-❌ WRONG:
-Platform Revenue = X × ₹1 × 55% = ₹0.55X
-Creator Diamonds = X × ₹1 × 45% = ₹0.45X
-```
-
-**CORRECTED FORMULA (Approved in REQ-RM-001, REQ-API-002):**
-```
-✓ CORRECT:
-User Spends X Coins
+User Spends X Coins on Call/Room
     │
     ▼
 Gross Amount = X × ₹1
@@ -128,26 +128,51 @@ Tier 2 (80%): ₹50K-200K monthly → Creator = ₹0.80X, Platform = ₹0.20X
 Tier 3 (85%): ₹200K+ monthly → Creator = ₹0.85X, Platform = ₹0.15X
 ```
 
+**For Gifts (45% Fixed Model - Per PRD Section 9.4):**
+```
+User Sends Gift Worth X Coins
+    │
+    ▼
+Gross Amount = X × ₹1
+    │
+    ▼
+Fixed 45% Creator Share (NO tier variation)
+    │
+    ▼
+Creator Earnings = ₹0.45X
+Platform Revenue = ₹0.55X
+```
+
 **Example Calculations:**
 
-**Tier 1 Creator (75% share):**
+**Example 1: Call Revenue (Tier 1 Creator - 75% Share)**
 ```
-User sends 100-coin gift
+User calls for 10 minutes at ₹12/min:
+- Coins charged: 120 coins
+- Gross: ₹120 (120 coins × ₹1)
+- Creator earns: ₹90 (75% × ₹120)
+- Platform keeps: ₹30 (25% × ₹120)
+```
+
+**Example 2: Gift Revenue (Any Creator - 45% Fixed Share)**
+```
+User sends 100-coin Rose gift:
 - Gross: ₹100 (100 coins × ₹1)
-- Creator earns: ₹75 (75% × ₹100)
-- Platform keeps: ₹25 (25% × ₹100)
+- Creator earns: ₹45 (45% × ₹100) ← Fixed rate for gifts
+- Platform keeps: ₹55 (55% × ₹100)
 
-vs PRD's WRONG calculation:
-- Creator earns: ₹45 (45% × ₹100) ❌
-- Platform keeps: ₹55 (55% × ₹100) ❌
+User sends 500-coin Crown gift:
+- Gross: ₹500
+- Creator earns: ₹225 (45% × ₹500)
+- Platform keeps: ₹275 (55% × ₹500)
 ```
 
-**Tier 3 Creator (85% share - Top 5%):**
+**Example 3: Mixed Revenue (Tier 3 Creator - 85% for calls)**
 ```
-User sends 100-coin gift
-- Gross: ₹100
-- Creator earns: ₹85 (85% × ₹100)
-- Platform keeps: ₹15 (15% × ₹100)
+Same day earnings:
+- Calls: 1000 coins → ₹850 creator (85% tier)
+- Gifts: 500 coins → ₹225 creator (45% fixed)
+- Total creator: ₹1075 from ₹1500 gross (71.7% blended rate)
 ```
 
 **Implementation:**
@@ -155,21 +180,31 @@ User sends 100-coin gift
 def calculate_creator_earnings(
     creator_id: UUID,
     coins_spent: Decimal,
+    transaction_type: str,  # 'call', 'gift', or 'room'
     db: Session
 ) -> Tuple[Decimal, Decimal, Decimal]:
     """
-    Calculate creator earnings using approved 75-85% tiered model
-
-    This corrects PRD Section 9.4 error (45% → 75-85%)
+    Calculate creator earnings using DUAL revenue model:
+    - Calls/Rooms: 75-85% tiered
+    - Gifts: 45% fixed
     """
     COIN_TO_INR = Decimal("1.0")  # 1 coin = ₹1 when spent
+    GIFT_CREATOR_SHARE = Decimal("0.45")  # Fixed 45% for gifts
 
-    # Query creator performance tier
+    gross_amount = coins_spent * COIN_TO_INR
+
+    # Gifts use fixed 45% (no tier variation)
+    if transaction_type == "gift":
+        creator_earnings = gross_amount * GIFT_CREATOR_SHARE
+        platform_earnings = gross_amount - creator_earnings
+        return creator_earnings, platform_earnings, GIFT_CREATOR_SHARE
+
+    # Calls and Rooms use 75-85% tiered model
     performance = db.query(CreatorPerformance).filter(
         CreatorPerformance.user_id == creator_id
     ).first()
 
-    # Determine tier (75%, 80%, or 85%)
+    # Determine tier for calls/rooms
     if not performance:
         tier_percent = Decimal("0.75")  # New creator: Tier 1
     elif performance.total_earnings_30d >= Decimal("200000.00"):
@@ -179,29 +214,28 @@ def calculate_creator_earnings(
     else:
         tier_percent = Decimal("0.75")  # Tier 1: Default
 
-    # Calculate earnings
-    gross_amount = coins_spent * COIN_TO_INR
     creator_earnings = gross_amount * tier_percent
     platform_earnings = gross_amount - creator_earnings
 
     return creator_earnings, platform_earnings, tier_percent
 ```
 
-**Applies to All Coin Spending:**
-1. **Calls:** Coins charged per minute → Revenue split 75-85%
-2. **Gifts:** Gift coin price → Revenue split 75-85%
-3. **Room Gifts:** Room gift coins → Revenue split 75-85% (to room owner)
+**Revenue Split by Transaction Type:**
+1. **Calls:** Coins charged per minute → Revenue split 75-85% (tiered by creator performance)
+2. **Gifts:** Gift coin price → Revenue split 45% fixed (all creators equal)
+3. **Room Gifts:** Room gift coins → Revenue split 75-85% (tiered, to room owner)
 
 **Rationale:**
-**CRITICAL FIX** for PRD error. Section 9 showed 45% creator share, contradicting all approved requirements (REQ-RM-001, REQ-ES-004, REQ-API-002). Must maintain consistency across all sections.
+Dual revenue model balances creator economics with platform sustainability. Calls/rooms use 75-85% tiered model to reward high-performing creators. Gifts use fixed 45% to improve platform margins on impulse purchases while maintaining PRD Section 9.4 gift economics.
 
 **Acceptance Criteria:**
-- [ ] All coin spending uses 75-85% tiered calculation (NOT 45%)
-- [ ] Gift "Creator Earns" values recalculated (see REQ-CE-004)
+- [ ] Calls use 75-85% tiered calculation based on creator performance
+- [ ] Gifts use fixed 45% calculation (all creators equal)
+- [ ] Room gifts use 75-85% tiered calculation (to room owner)
+- [ ] Gift "Creator Earns" values recalculated with 45% (see REQ-CE-004)
 - [ ] Call billing uses tiered revenue split
-- [ ] Room gift revenue uses tiered split
-- [ ] PRD Section 9.4 formula marked as ERROR in documentation
-- [ ] Financial projections updated to reflect correct revenue share
+- [ ] Transaction type ('call', 'gift', 'room') determines revenue model
+- [ ] Financial projections use blended rate (weighted by call vs gift volume)
 
 **Dependencies:**
 - REQ-RM-001 (75-85% tiered model from Section 4)
@@ -362,110 +396,91 @@ PRD Section 9.2 shows fixed tier rates, but REQ-RM-005 (approved) specifies crea
 
 ---
 
-## REQ-CE-004: Corrected Gift Pricing with 75-85% Revenue
+## REQ-CE-004: Gift Pricing with 45% Fixed Revenue Share
 
 **Priority:** P0
 **Type:** Business Requirement
 **Status:** Approved
 
 **Description:**
-Implement 13 gift tiers (10-10,000 coins) with CORRECTED "Creator Earns" calculations using 75-85% tiered revenue model (NOT PRD's 45%). Includes mid-tier gifts (250, 300, 400 coins) per user request.
+Implement 10 gift tiers (10-10,000 coins) per PRD Section 9.3 with 45% fixed creator revenue share (simplified model, no tier variation for gifts).
 
 **Specifications:**
 
-**PRD Section 9.3 ERROR:**
-```
-❌ WRONG: Creator earns calculated with 45%
-- Rose (10 coins) → Creator earns ₹4.50
-- Heart (20 coins) → Creator earns ₹9.00
-- Castle (10000 coins) → Creator earns ₹4,500.00
-```
+**Gift Pricing (Per PRD Section 9.3 - 45% Fixed Creator Share):**
 
-**CORRECTED GIFT PRICING (75-85% Tiered Model):**
+| Gift | Coins | Creator Earns (45%) | Platform (55%) | Category |
+|------|-------|--------------------|--------------|---------|
+| 🌹 Rose | 10 | ₹4.50 | ₹5.50 | Basic |
+| ❤️ Heart | 20 | ₹9.00 | ₹11.00 | Basic |
+| ☕ Coffee | 50 | ₹22.50 | ₹27.50 | Basic |
+| 🧸 Teddy Bear | 100 | ₹45.00 | ₹55.00 | Premium |
+| 💐 Bouquet | 150 | ₹67.50 | ₹82.50 | Premium |
+| 💎 Diamond | 200 | ₹90.00 | ₹110.00 | Premium |
+| 👑 Crown | 500 | ₹225.00 | ₹275.00 | Luxury |
+| 🏎️ Sports Car | 1000 | ₹450.00 | ₹550.00 | Luxury |
+| ✈️ Private Jet | 5000 | ₹2,250.00 | ₹2,750.00 | Exclusive |
+| 🏰 Castle | 10000 | ₹4,500.00 | ₹5,500.00 | Exclusive |
 
-| Gift | Coins | Creator Earns (Tier 1: 75%) | Creator Earns (Tier 3: 85%) | Category |
-|------|-------|----------------------------|----------------------------|----------|
-| 🌹 Rose | 10 | ₹7.50 | ₹8.50 | Basic |
-| ❤️ Heart | 20 | ₹15.00 | ₹17.00 | Basic |
-| ☕ Coffee | 50 | ₹37.50 | ₹42.50 | Basic |
-| 🧸 Teddy Bear | 100 | ₹75.00 | ₹85.00 | Premium |
-| 💐 Bouquet | 150 | ₹112.50 | ₹127.50 | Premium |
-| 💎 Diamond | 200 | ₹150.00 | ₹170.00 | Premium |
-| 🎁 Gift Box | 250 | ₹187.50 | ₹212.50 | Premium |
-| 🌟 Star | 300 | ₹225.00 | ₹255.00 | Premium |
-| 💝 Luxury Gift | 400 | ₹300.00 | ₹340.00 | Premium |
-| 👑 Crown | 500 | ₹375.00 | ₹425.00 | Luxury |
-| 🏎️ Sports Car | 1000 | ₹750.00 | ₹850.00 | Luxury |
-| ✈️ Private Jet | 5000 | ₹3,750.00 | ₹4,250.00 | Exclusive |
-| 🏰 Castle | 10000 | ₹7,500.00 | ₹8,500.00 | Exclusive |
-
-**Total: 13 gifts** (PRD had 10, added 3 mid-tier: 250, 300, 400 per user decision Q9)
-
-**New Mid-Tier Gifts (250-400 coins):**
-- 🎁 Gift Box (250 coins) - Fills gap between Diamond (200) and Crown (500)
-- 🌟 Star (300 coins) - Mid-luxury tier
-- 💝 Luxury Gift (400 coins) - Premium before Crown (500)
+**Total: 10 gifts** (per PRD Section 9.3, matches user decision Q5: "Keep PRD gift catalog")
 
 **Gift Categories:**
 1. **Basic (10-50 coins):** Entry-level, frequent gifts (Rose, Heart, Coffee)
-2. **Premium (100-400 coins):** Mid-tier, special occasions (Teddy, Bouquet, Diamond, Gift Box, Star, Luxury Gift)
+2. **Premium (100-200 coins):** Mid-tier, special occasions (Teddy, Bouquet, Diamond)
 3. **Luxury (500-1000 coins):** High-value, status symbols (Crown, Sports Car)
 4. **Exclusive (5000-10000 coins):** Ultra-premium, whales only (Private Jet, Castle)
 
 **Revenue Calculation Example:**
 ```python
-# Rose gift (10 coins) sent to Tier 1 creator (75%)
+# Rose gift (10 coins) sent to any creator (45% fixed)
 coins_spent = 10
 gross_amount = 10 × ₹1 = ₹10
-creator_earnings = ₹10 × 0.75 = ₹7.50  # NOT ₹4.50 (PRD error)
-platform_earnings = ₹10 × 0.25 = ₹2.50  # NOT ₹5.50 (PRD error)
+creator_earnings = ₹10 × 0.45 = ₹4.50  # Fixed 45% for all gifts
+platform_earnings = ₹10 × 0.55 = ₹5.50
 
-# Castle gift (10000 coins) sent to Tier 3 creator (85%)
+# Castle gift (10000 coins) sent to any creator (45% fixed)
 coins_spent = 10000
 gross_amount = 10000 × ₹1 = ₹10,000
-creator_earnings = ₹10,000 × 0.85 = ₹8,500  # NOT ₹4,500 (PRD error)
-platform_earnings = ₹10,000 × 0.15 = ₹1,500  # NOT ₹5,500 (PRD error)
+creator_earnings = ₹10,000 × 0.45 = ₹4,500  # Fixed 45% (NO tier variation)
+platform_earnings = ₹10,000 × 0.55 = ₹5,500
 ```
 
 **Database Implementation:**
 ```sql
--- gifts table seed data (corrected revenue calculations)
+-- gifts table seed data (45% fixed creator share)
 INSERT INTO gifts (names, descriptions, icon_url, coin_price, diamond_value, category, sort_order) VALUES
 -- Basic
-('{"en":"Rose","ta":"ரோஜா","te":"రోజా","kn":"ಗುಲಾಬಿ","hi":"गुलाब"}', '{"en":"Symbol of love"}', '/gifts/rose.png', 10, 7.50, 'basic', 1),
-('{"en":"Heart","ta":"இதயம்","te":"హృదయం","kn":"ಹೃದಯ","hi":"दिल"}', '{"en":"From my heart"}', '/gifts/heart.png', 20, 15.00, 'basic', 2),
-('{"en":"Coffee","ta":"காபி","te":"కాఫీ","kn":"ಕಾಫಿ","hi":"कॉफी"}', '{"en":"Let\'s chat"}', '/gifts/coffee.png', 50, 37.50, 'basic', 3),
+('{"en":"Rose","ta":"ரோஜா","te":"రోజా","kn":"ಗುಲಾಬಿ","hi":"गुलाब"}', '{"en":"Symbol of love"}', '/gifts/rose.png', 10, 4.50, 'basic', 1),
+('{"en":"Heart","ta":"இதയம்","te":"హృదయం","kn":"ಹೃದಯ","hi":"दिल"}', '{"en":"From my heart"}', '/gifts/heart.png', 20, 9.00, 'basic', 2),
+('{"en":"Coffee","ta":"காபி","te":"కాఫీ","kn":"ಕಾಫಿ","hi":"कॉफी"}', '{"en":"Let\'s chat"}', '/gifts/coffee.png', 50, 22.50, 'basic', 3),
 
 -- Premium
-('{"en":"Teddy Bear"}', '{"en":"Cute and cuddly"}', '/gifts/teddy.png', 100, 75.00, 'premium', 4),
-('{"en":"Bouquet"}', '{"en":"Beautiful flowers"}', '/gifts/bouquet.png', 150, 112.50, 'premium', 5),
-('{"en":"Diamond"}', '{"en":"Forever precious"}', '/gifts/diamond.png', 200, 150.00, 'premium', 6),
-('{"en":"Gift Box"}', '{"en":"Special surprise"}', '/gifts/giftbox.png', 250, 187.50, 'premium', 7),  -- NEW
-('{"en":"Star"}', '{"en":"You\'re a star"}', '/gifts/star.png', 300, 225.00, 'premium', 8),  -- NEW
-('{"en":"Luxury Gift"}', '{"en":"Premium present"}', '/gifts/luxury.png', 400, 300.00, 'premium', 9),  -- NEW
+('{"en":"Teddy Bear"}', '{"en":"Cute and cuddly"}', '/gifts/teddy.png', 100, 45.00, 'premium', 4),
+('{"en":"Bouquet"}', '{"en":"Beautiful flowers"}', '/gifts/bouquet.png', 150, 67.50, 'premium', 5),
+('{"en":"Diamond"}', '{"en":"Forever precious"}', '/gifts/diamond.png', 200, 90.00, 'premium', 6),
 
 -- Luxury
-('{"en":"Crown"}', '{"en":"You\'re royalty"}', '/gifts/crown.png', 500, 375.00, 'luxury', 10),
-('{"en":"Sports Car"}', '{"en":"Fast and furious"}', '/gifts/car.png', 1000, 750.00, 'luxury', 11),
+('{"en":"Crown"}', '{"en":"You\'re royalty"}', '/gifts/crown.png', 500, 225.00, 'luxury', 7),
+('{"en":"Sports Car"}', '{"en":"Fast and furious"}', '/gifts/car.png', 1000, 450.00, 'luxury', 8),
 
 -- Exclusive
-('{"en":"Private Jet"}', '{"en":"Fly away together"}', '/gifts/jet.png', 5000, 3750.00, 'exclusive', 12),
-('{"en":"Castle"}', '{"en":"Build a kingdom"}', '/gifts/castle.png', 10000, 7500.00, 'exclusive', 13);
+('{"en":"Private Jet"}', '{"en":"Fly away together"}', '/gifts/jet.png', 5000, 2250.00, 'exclusive', 9),
+('{"en":"Castle"}', '{"en":"Build a kingdom"}', '/gifts/castle.png', 10000, 4500.00, 'exclusive', 10);
 ```
 
-**Note:** `diamond_value` shows Tier 1 (75%) earnings as baseline
+**Note:** `diamond_value` column stores creator earnings at 45% fixed rate (all creators earn same percentage on gifts)
 
 **Rationale:**
-PRD Section 9.3 used 45% calculations, contradicting approved 75-85% model. Added mid-tier gifts (250, 300, 400) to fill psychological gap between 200 and 500 coins, improving monetization.
+Simplified gift revenue model using fixed 45% creator share (per PRD Section 9.4) regardless of creator tier. Easier to understand for users, better platform margins on impulse purchases. Matches PRD gift catalog exactly (10 gifts).
 
 **Acceptance Criteria:**
-- [ ] 13 gifts implemented (10 from PRD + 3 new mid-tier)
-- [ ] All "Creator Earns" values calculated with 75-85% (NOT 45%)
-- [ ] Mid-tier gifts (Gift Box, Star, Luxury Gift) fill 250-400 range
-- [ ] Gift categories: Basic (3), Premium (6), Luxury (2), Exclusive (2)
-- [ ] gifts table seed data matches corrected revenue calculations
-- [ ] Mobile app displays all 13 gifts with localized names
-- [ ] Gift sending triggers correct tiered revenue split
+- [ ] 10 gifts implemented per PRD Section 9.3
+- [ ] All "Creator Earns" values calculated with 45% fixed rate
+- [ ] NO tier variation for gifts (all creators earn 45%)
+- [ ] Gift categories: Basic (3), Premium (3), Luxury (2), Exclusive (2)
+- [ ] gifts table seed data matches 45% creator share
+- [ ] Mobile app displays all 10 gifts with localized names (5 languages)
+- [ ] Gift sending uses fixed 45% revenue split (see REQ-CE-002)
 
 **Dependencies:**
 - REQ-CE-002 (Corrected revenue formula)
@@ -1511,15 +1526,178 @@ Coin economy analytics enable data-driven decisions: adjust package pricing, opt
 
 ---
 
+## REQ-CE-011: Daily Login Bonus Program
+
+**Priority:** P2
+**Type:** Engagement Requirement
+**Status:** Approved
+
+**Description:**
+Implement daily login bonus reward system: 20 coins at signup (one-time) + 5 bonus coins per day for users who log in daily. Encourages daily engagement and reduces initial coin purchase friction.
+
+**Specifications:**
+
+**Signup Bonus (One-Time):**
+```
+New user creates account:
+  ├─ Credit 20 bonus coins to coin_wallets.bonus_balance
+  ├─ Bonus expires in 90 days (standard bonus expiry)
+  └─ Tracked in coin_transactions with type="signup_bonus"
+```
+
+**Daily Login Bonus:**
+```
+User opens app each day:
+  ├─ Check last_login_bonus_at timestamp
+  ├─ If >24 hours ago OR NULL:
+  │   ├─ Credit 5 bonus coins to bonus_balance
+  │   ├─ Update last_login_bonus_at = NOW()
+  │   ├─ Track in coin_transactions with type="daily_login_bonus"
+  │   └─ Show notification: "Daily Login Bonus: +5 coins!"
+  └─ If <24 hours ago:
+      └─ No bonus (already claimed today)
+```
+
+**Database Schema:**
+```sql
+-- coin_wallets table addition
+ALTER TABLE coin_wallets
+    ADD COLUMN last_login_bonus_at TIMESTAMPTZ;  -- Track last daily bonus claim
+
+-- coin_transactions types
+-- 'signup_bonus' → 20 coins at signup
+-- 'daily_login_bonus' → 5 coins per day
+```
+
+**Timing Rules:**
+- **Daily reset:** Based on user's last claim (24-hour rolling window, NOT midnight)
+- **Signup timing:** Immediately after account creation (before onboarding complete)
+- **Streak tracking:** Optional future enhancement (not MVP)
+
+**Expiry:**
+- Signup bonus (20 coins): 90-day expiry (standard bonus expiry)
+- Daily login bonus (5 coins/day): 90-day expiry from credit date
+
+**UI/UX:**
+```
+Signup flow:
+  Step 1: Account created
+  Step 2: [MODAL] "Welcome! Here's 20 coins to get started! 🎉"
+  Step 3: Continue to onboarding
+
+Daily login:
+  - Check on app open (background)
+  - If eligible: Show toast notification "+5 coins! Daily Login Bonus 🎁"
+  - Coin balance updates automatically
+```
+
+**Implementation:**
+```python
+async def credit_signup_bonus(user_id: UUID, db: Session):
+    """Credit 20 coins signup bonus (one-time)"""
+
+    wallet = db.query(CoinWallet).filter(CoinWallet.user_id == user_id).first()
+
+    # Credit signup bonus
+    wallet.bonus_balance += 20
+
+    # Create transaction record
+    transaction = CoinTransaction(
+        user_id=user_id,
+        transaction_type="signup_bonus",
+        bonus_coins=20,
+        bonus_expires_at=datetime.utcnow() + timedelta(days=90),
+        status="completed"
+    )
+    db.add(transaction)
+    db.commit()
+
+    return {"bonus_credited": 20, "message": "Welcome bonus added!"}
+
+
+async def check_daily_login_bonus(user_id: UUID, db: Session):
+    """Check and credit daily login bonus if eligible"""
+
+    wallet = db.query(CoinWallet).filter(CoinWallet.user_id == user_id).first()
+
+    # Check if 24+ hours since last claim
+    now = datetime.utcnow()
+    if wallet.last_login_bonus_at:
+        hours_since = (now - wallet.last_login_bonus_at).total_seconds() / 3600
+        if hours_since < 24:
+            return {"eligible": False, "next_bonus_in_hours": round(24 - hours_since, 1)}
+
+    # Credit daily bonus
+    wallet.bonus_balance += 5
+    wallet.last_login_bonus_at = now
+
+    # Create transaction record
+    transaction = CoinTransaction(
+        user_id=user_id,
+        transaction_type="daily_login_bonus",
+        bonus_coins=5,
+        bonus_expires_at=now + timedelta(days=90),
+        status="completed"
+    )
+    db.add(transaction)
+    db.commit()
+
+    return {"eligible": True, "bonus_credited": 5, "message": "+5 coins! Daily Login Bonus 🎁"}
+```
+
+**Trigger Points:**
+- **Signup bonus:** POST /api/v1/auth/register (after account creation)
+- **Daily login bonus:** Mobile app startup (check on app open)
+
+**Rationale:**
+Signup bonus reduces initial friction (users can try features before purchasing). Daily login bonus drives DAU/retention. Combined with low ₹49 package, creates strong onboarding funnel. Per user decision Q7: "keep option 1 and also add daily login bonus of 5 coins/day only if they login".
+
+**Acceptance Criteria:**
+- [ ] New users receive 20 bonus coins at signup (one-time)
+- [ ] Users receive 5 bonus coins per day on login (24-hour cooldown)
+- [ ] last_login_bonus_at timestamp tracked in coin_wallets
+- [ ] Signup bonus transaction created with type="signup_bonus"
+- [ ] Daily login bonus transaction created with type="daily_login_bonus"
+- [ ] Both bonuses expire after 90 days (standard bonus expiry)
+- [ ] Modal shown on signup: "Welcome! Here's 20 coins"
+- [ ] Toast notification on daily login: "+5 coins! Daily Login Bonus"
+- [ ] 24-hour cooldown enforced (no double claims)
+
+**Dependencies:**
+- REQ-CE-005 (Three-tier balance tracking with bonus_balance)
+- REQ-DB-002 (coin_transactions table)
+- REQ-API-001 (Wallet APIs)
+
+**Design Decisions:**
+- **DD-CE-026**: 20 coins signup chosen for trial (2 calls at ₹10/min)
+- **DD-CE-027**: 5 coins daily chosen for engagement without abuse
+- **DD-CE-028**: 24-hour rolling window chosen over midnight reset (simpler, no timezone issues)
+
+**Notes:**
+- Signup bonus: One-time only (checked by not creating duplicate signup_bonus transactions)
+- Daily bonus: Unlimited (users can claim every day indefinitely)
+- Bonus coins subject to 90-day expiry (per REQ-CE-005)
+- Future enhancement: Streak bonuses (7-day streak = extra coins)
+
+**Testing Requirements:**
+- Test signup bonus credited once at registration
+- Test daily login bonus credited after 24+ hours
+- Test daily login bonus NOT credited within 24 hours
+- Test bonus coins expire after 90 days
+- Test transaction records created correctly
+- Test UI notifications shown (modal + toast)
+
+---
+
 ## Summary
 
-**Total Requirements:** 10
+**Total Requirements:** 11
 **Priority Breakdown:**
 - **P0 (Critical):** 6 requirements
-  - REQ-CE-001: Coin packages (₹99-1999, 5 packages)
-  - REQ-CE-002: Corrected revenue split (75-85% vs PRD's 45%)
+  - REQ-CE-001: Coin packages (₹49-1999, 6 packages including entry-level ₹49)
+  - REQ-CE-002: Dual revenue model (75-85% for calls, 45% for gifts)
   - REQ-CE-003: Creator-set call rates (₹8-25/min)
-  - REQ-CE-004: Corrected gift pricing (13 gifts with 75-85% revenue)
+  - REQ-CE-004: Gift pricing (10 gifts with 45% fixed revenue)
   - REQ-CE-005: Three-tier balance tracking (purchased/bonus/promo)
   - REQ-CE-006: 1 coin = ₹1 spending standard
 
@@ -1528,18 +1706,20 @@ Coin economy analytics enable data-driven decisions: adjust package pricing, opt
   - REQ-CE-008: Technical refunds only policy
   - REQ-CE-010: Coin economy analytics
 
-- **P2 (Medium):** 1 requirement
+- **P2 (Medium):** 2 requirements
   - REQ-CE-009: No peak hour pricing
+  - REQ-CE-011: Daily login bonus program (20 signup + 5/day)
 
 **Key Achievements:**
-1. **Fixed PRD errors:** 45% → 75-85% revenue, removed fixed tier rates, corrected gift earnings
-2. **Added mid-tier gifts:** 13 gifts (vs PRD's 10) for better monetization
+1. **Dual revenue model:** Balanced approach with 75-85% for calls, 45% for gifts
+2. **Entry-level access:** ₹49 package + 20 signup bonus + 5 coins/day login bonus
 3. **Simplified pricing:** No peak hour multipliers, fixed creator rates 24/7
-4. **Fair bonus policy:** Creators earn 75-85% on bonus coins (not penalized)
+4. **Fair bonus policy:** Creators earn same revenue share on bonus coins
 5. **Comprehensive tracking:** Three-tier balance system for accurate expiry
+6. **Engagement incentives:** Daily login rewards drive DAU/retention
 
 **Timeline Impact:** +0 weeks (coin economy design, no implementation delay)
-**Updated MVP Timeline:** 22-29 weeks (unchanged from Section 8)
+**Updated MVP Timeline:** 16-20 weeks (unchanged from Section 13)
 
 ---
 

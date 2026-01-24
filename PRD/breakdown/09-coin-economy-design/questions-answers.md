@@ -3,302 +3,270 @@
 **Section:** Coin Economy Design
 **Lines:** 1928-2002 (75 lines)
 **Complexity:** Moderate
-**Date:** 2026-01-20
+**Date:** 2026-01-24
+**Session:** Updated with new answers from current session
 
 ---
 
-## CRITICAL CONFLICTS IDENTIFIED
+## Question Round 1: Core Questions
 
-### Conflict 1: Revenue Split Formula (MOST CRITICAL)
-**PRD Section 9.4 (Lines 1984-1987):**
-```
-Platform Revenue = X × ₹1 × 55% = ₹0.55X
-Creator Diamonds = X × ₹1 × 45% = ₹0.45X
-```
+### Q1: Revenue Split Model for Coin Economy
 
-**Conflicts with Approved Requirements:**
-- **REQ-RM-001** (Section 4): 75-85% tiered creator share (NOT 45%)
-- **REQ-ES-004** (Section 1): Dynamic tiered model
-- **REQ-API-002** (Section 8): CRITICAL FIX implemented - 75-85% calculation
-- **REQ-DB-006** (Section 7): Seed data corrected to match 75-85% model
+**Context:** The PRD shows 45% creator share (platform 55%, creator 45%) in Section 9.4, but this conflicts with previously approved requirements showing 75-85% tiered creator share for calls.
 
-**Impact:** This is the SAME 45% error we fixed in Section 8 API Specifications!
+**Question:** How should we reconcile the coin economy revenue split?
 
----
+**Options Provided:**
+1. Correct to 75-85% tiered model (aligns with all previous approvals)
+2. Use 55% platform / 45% creator for gifts only (dual model)
+3. Keep PRD's 45% for everything
 
-### Conflict 2: Call Pricing Structure
-**PRD Section 9.2 (Lines 1943-1961):**
-- Fixed rates by user type: Regular (5/8), Popular (8/12), Verified (12/18), Celebrity (20/30)
-- Peak hour multiplier (1.5x)
+**User Answer:** "Use 55% platform / 45% creator for gifts only"
 
-**Conflicts with Approved Requirements:**
-- **REQ-RM-005** (Section 4): Creators set their own rates (₹8-25/min)
-- **REQ-DB-004** (Section 7): creator_call_rates table for custom rates
-- **REQ-API-001** (Section 8): PUT /api/v1/creator/rates endpoint
+**Impact:**
+- Calls: Use 75-85% tiered model (based on creator performance)
+- Gifts: Use 45% fixed creator share (simplified, no tier variation)
+- Room gifts: Use 75-85% tiered model (to room owner)
+- Blended platform margin: ~23% weighted average (assuming 60% calls, 30% gifts, 10% rooms)
 
-**Issue:** PRD shows fixed rates by user tier, but approved model allows creator flexibility
+**Decision Recorded:** REQ-CE-002 updated to reflect dual revenue model
 
 ---
 
-### Conflict 3: Gift Pricing Creator Earnings
-**PRD Section 9.3 (Lines 1965-1976):**
-- Shows "Creator Earns" using 45% calculation
-- Example: Rose (10 coins) → Creator earns ₹4.50 (45%)
+### Q2: Call Pricing Model
 
-**Should be:**
-- Rose (10 coins) → Creator earns ₹7.50-8.50 (75-85% based on tier)
+**Context:** The PRD shows fixed rates by user type (Regular, Popular, Verified, Celebrity), but previously approved requirements show creator-set rates (₹8-25/min).
 
----
+**Question:** Which call pricing model should the coin economy implement?
 
-### Conflict 4: Coin Package Discrepancy
-**PRD Section 9.1 (Lines 1932-1939):**
-- Shows Starter package: ₹49 = 50 coins
+**Options Provided:**
+1. Creator-set rates in rupees (Recommended) - Approved in previous sections
+2. Fixed rates by tier (PRD's model) - Regular (5), Popular (8), Verified (12), Celebrity (20)
+3. Hybrid model - Default rates + creator override option
 
-**Conflicts with:**
-- **REQ-RM-004** (Section 4): Minimum package ₹99 = 110 coins
-- **REQ-DB-006** (Section 7): Seed data starts at ₹99
+**User Answer:** "Creator-set rates in rupees (Recommended)"
 
-**Issue:** PRD includes ₹49 package not in approved requirements
+**Impact:**
+- Creators control their own call rates (₹8-25/min audio, ₹12-35/min video)
+- NO fixed tier rates by platform
+- NO automatic peak hour pricing
+- Simplifies user experience (predictable pricing)
 
----
-
-## Core Questions (Q1-Q3)
-
-### Q1: Revenue Split Correction (CRITICAL)
-The PRD shows 45% creator share (platform 55%, creator 45%) in Section 9.4, but this conflicts with all approved requirements showing 75-85% tiered creator share.
-
-**Question:**
-How should we reconcile the coin economy revenue split?
-
-**Options:**
-1. **Correct to 75-85% tiered model** (aligns with REQ-RM-001, REQ-API-002, all approved decisions)
-2. Keep PRD's 45% (contradicts all previous approvals)
-
-**Recommendation:** Option 1 - Correct to 75-85% tiered model
-
-**Dependencies:**
-- Gift pricing "Creator Earns" column needs recalculation
-- Conversion formula needs update
-- All financial projections need adjustment
+**Decision Recorded:** REQ-CE-003 confirms creator-set rates, no fixed tiers
 
 ---
 
-### Q2: Call Pricing Model Selection
-The PRD shows fixed rates by user type (Regular, Popular, Verified, Celebrity), but approved requirements show creator-set rates (₹8-25/min).
+### Q3: Peak Hour Pricing (Surge Pricing)
 
-**Question:**
-Which call pricing model should the coin economy implement?
+**Context:** PRD shows 1.5x multiplier during peak hours (10 PM - 2 AM IST). If we implement creator-set rates, should peak hour pricing still apply?
 
-**Options:**
-1. **Creator-set rates (₹8-25/min)** - Approved in REQ-RM-005, REQ-DB-004, REQ-API-001
-   - Pros: Creator autonomy, competitive pricing, aligns with approved architecture
-   - Cons: More complex implementation (already implemented in Section 7 & 8)
+**Question:** Should we apply peak hour pricing to creator-set rates?
 
-2. **Fixed rates by tier (PRD's model)** - Regular (5), Popular (8), Verified (12), Celebrity (20)
-   - Pros: Simpler coin economy
-   - Cons: Less creator flexibility, contradicts approved requirements
+**Options Provided:**
+1. Apply peak multiplier to creator rates - Higher earnings during peak demand
+2. Remove surge pricing (Recommended) - Creator rate fixed 24/7
+3. Optional peak pricing - Creators opt-in to peak multiplier
 
-3. **Hybrid model** - Default rates by tier + creator override option
-   - Pros: Balance of simplicity and flexibility
-   - Cons: Most complex
+**User Answer:** "Remove surge pricing (Recommended)"
 
-**Recommendation:** Option 1 - Creator-set rates (already approved and implemented)
+**Impact:**
+- Creator rates are fixed 24/7 (no automatic surge)
+- Predictable pricing for callers (no surprise price changes)
+- If creator wants higher peak rates, they can manually adjust their base rate
+- Simplifies billing logic (no time zone conversions)
 
-**Follow-up:** Should we keep peak hour pricing (1.5x during 10 PM - 2 AM IST)?
+**Decision Recorded:** REQ-CE-009 - No peak hour pricing
 
 ---
 
-### Q3: Coin Package Minimum
-The PRD shows a ₹49 Starter package (50 coins), but approved requirements show minimum ₹99 (110 coins).
+## Question Round 2: Package & Gift Configuration
 
-**Question:**
-Should we include the ₹49 package or start at ₹99?
+### Q4: Coin Package Selection
 
-**Options:**
-1. **Start at ₹99** (aligns with REQ-RM-004, REQ-DB-006)
-   - Pros: Higher revenue per transaction, already in seed data
-   - Cons: Higher barrier to entry
+**Context:** The PRD shows a ₹49 Starter package (50 coins), but previously approved requirements show minimum ₹99 (110 coins).
 
-2. **Add ₹49 package** (follow PRD)
-   - Pros: Lower barrier to entry, trial package
-   - Cons: Contradicts approved seed data, requires database update
+**Question:** Should we include the ₹49 package or start at ₹99?
 
-**Recommendation:** Ask user preference - lower barrier (₹49) vs approved minimum (₹99)
+**Options Provided:**
+1. Start at ₹99 (aligns with previous approvals) - Higher revenue per transaction
+2. Keep PRD packages (Recommended) - Includes ₹49 trial package
+3. Add ₹49 AND keep ₹99+ packages (7 total packages)
 
-**Impact on seed data:** If ₹49 added, REQ-DB-006 needs update
+**User Answer:** "Keep PRD packages (Recommended)"
 
----
+**Impact:**
+- 6 coin packages total: ₹49, ₹99, ₹299, ₹499, ₹999, ₹1999
+- Lower barrier to entry with ₹49 trial package
+- All packages have 10% bonus (simplified from previous progressive bonuses)
+- Database seed data updated to include ₹49 package
 
-## Follow-up Questions (Q4-Q6)
-
-### Q4: Coin Expiry Implementation
-The PRD defines three expiry rules (purchased: 365 days inactivity, bonus: 90 days, promotional: 30 days).
-
-**Question:**
-How should coin expiry be tracked and enforced?
-
-**Options:**
-1. **Separate coin balance fields** - purchased_balance, bonus_balance, promo_balance
-   - Pros: Clear separation, accurate expiry tracking
-   - Cons: More complex wallet logic, multiple balance fields
-
-2. **Transaction-level expiry** - Track expiry_date per coin_transactions record
-   - Pros: Granular tracking, audit trail
-   - Cons: Complex balance calculation (sum non-expired transactions)
-
-3. **Cron job expiry** - Single balance field, daily job expires coins
-   - Pros: Simple balance management
-   - Cons: Less granular, harder to show users which coins expire when
-
-**Recommendation:** Option 1 - Separate balance fields (simplest for user UX)
-
-**Database Impact:** coin_wallets table needs purchased_balance, bonus_balance, promo_balance columns
+**Decision Recorded:** REQ-CE-001 updated to 6 packages (₹49-₹1999)
 
 ---
 
-### Q5: Refund Policy Implementation
-PRD states: "Refunds only within 7 days for technical issues, unused coins only"
+### Q5: Gift Catalog
 
-**Question:**
-How should "unused coins" be determined for refunds?
+**Context:** PRD defines 10 gifts (Rose to Castle). Previous breakdown added 3 mid-tier gifts (250, 300, 400 coins) for 13 total.
 
-**Options:**
-1. **All-or-nothing** - Refund only if 100% of coins from purchase unused
-   - Pros: Simple logic
-   - Cons: Harsh (if user spent 1 coin, loses refund eligibility)
+**Question:** Should we use PRD's 10-gift catalog or the expanded 13-gift version?
 
-2. **Proportional refund** - Refund value of unused coins from specific purchase
-   - Pros: Fair to users
-   - Cons: Complex tracking (which coins from which purchase were spent)
+**Options Provided:**
+1. Keep PRD gift catalog (Recommended) - 10 gifts (10-10,000 coins)
+2. Keep 13 gifts (previous breakdown) - Added mid-tier gifts (250, 300, 400)
+3. Expand further - Add more mid-tier options
 
-3. **No partial refunds** - Must be technical issue preventing coin use (not user regret)
-   - Pros: Clear policy
-   - Cons: Need technical issue verification
+**User Answer:** "Keep PRD gift catalog (Recommended)"
 
-**Recommendation:** Option 3 - Technical issues only, verified by support
+**Impact:**
+- 10 gifts total: Rose (10), Heart (20), Coffee (50), Teddy (100), Bouquet (150), Diamond (200), Crown (500), Sports Car (1000), Private Jet (5000), Castle (10000)
+- Removed mid-tier gifts: Gift Box (250), Star (300), Luxury Gift (400)
+- Matches PRD Section 9.3 exactly
+- Creator earnings calculated at 45% fixed (per Q1 dual model)
 
-**Process:** User submits ticket → Support verifies technical issue → Manual refund approval
+**Decision Recorded:** REQ-CE-004 updated to 10 gifts with 45% revenue
 
 ---
 
-### Q6: Peak Hour Pricing Enforcement
-PRD shows 1.5x multiplier during peak hours (10 PM - 2 AM IST).
+### Q6: Coin Expiry Rules
 
-**Question:**
-If we implement creator-set rates (Q2, Option 1), should peak hour pricing still apply?
+**Context:** PRD defines three expiry rules: purchased (365 days inactivity), bonus (90 days), promotional (30 days).
 
-**Options:**
-1. **Apply peak multiplier to creator rates** - Creator sets ₹10/min → peak becomes ₹15/min
-   - Pros: Higher creator earnings during peak demand
-   - Cons: Unexpected price changes for callers
+**Question:** Should we implement the PRD's expiry rules?
 
-2. **No peak pricing for creator rates** - Creator rate is fixed 24/7
-   - Pros: Predictable pricing, creator controls rate
-   - Cons: Doesn't incentivize creators to be online during peak hours
+**Options Provided:**
+1. Keep expiry rules (Recommended) - 365d/90d/30d per PRD
+2. No expiry - Coins never expire (user-friendly but risky)
+3. Modified expiry - Extend timeframes (e.g., 730d/180d/60d)
 
-3. **Optional peak pricing** - Creators can opt-in to peak multiplier
-   - Pros: Creator choice
-   - Cons: More complex implementation
+**User Answer:** "Keep expiry rules (Recommended)"
 
-**Recommendation:** Option 2 - No peak pricing (creator-set rates are fixed 24/7)
+**Impact:**
+- Purchased coins: Expire after 365 days of account inactivity (no spending)
+- Bonus coins: Expire 90 days from credit date
+- Promo coins: Expire 30 days from credit date
+- Three-tier balance tracking required (separate fields: purchased_balance, bonus_balance, promo_balance)
+- FIFO spending: Promo → Bonus → Purchased (use expiring coins first)
 
-**Rationale:** If creator wants higher peak rates, they can set higher base rate. Simplifies pricing UX.
-
----
-
-## Gap Analysis Questions (Q7-Q9)
-
-### Q7: Coin-to-Rupee Conversion Rate
-PRD uses 1 coin = ₹1 for all calculations, but coin packages show variable per-coin pricing (₹0.71 - ₹0.98).
-
-**Question:**
-What is the canonical coin-to-rupee conversion rate for spending?
-
-**Clarification Needed:**
-- When user spends 100 coins on a call/gift, does creator receive ₹100 × tier_percent?
-- Or does it depend on how much the user paid per coin (₹0.71 - ₹0.98)?
-
-**Assumption for calculations:** 1 coin = ₹1 when spent (regardless of purchase price)
-
-**Impact:** Gift pricing "Creator Earns" assumes 1 coin = ₹1
-
-**Recommendation:** Confirm 1 coin = ₹1 for all spending calculations (standard for virtual currency)
+**Decision Recorded:** REQ-CE-005 - Three-tier balance tracking with PRD expiry rules
 
 ---
 
-### Q8: Bonus Coins in Revenue Split
-PRD shows bonus coins (5-1050 per package), which expire after 90 days.
+## Question Round 3: Free Coins & Policies
 
-**Question:**
-When users spend bonus coins, do creators earn the same revenue share (75-85%)?
+### Q7: Free Coins (Signup & Daily Bonuses)
 
-**Options:**
-1. **Same revenue share** - Bonus coins = regular coins when spent
-   - Pros: Simpler logic, fair to creators
-   - Cons: Platform loses more on bonus coins
+**Context:** Need to determine if/how to provide free coins to new and daily users to reduce friction and drive engagement.
 
-2. **Lower revenue share for bonus coins** - e.g., 50% instead of 75-85%
-   - Pros: Reduces platform loss on bonuses
-   - Cons: Complex tracking, unfair to creators
+**Question:** Should we offer free coins at signup and/or daily login?
 
-3. **Platform absorbs bonus cost** - Bonus coins deducted from platform share, not creator share
-   - Pros: Fair to creators, incentivizes purchases
-   - Cons: Platform bears full bonus cost
+**Options Provided:**
+1. 20 coins at signup only (one-time welcome bonus)
+2. 5 coins/day for daily login (engagement driver)
+3. Both (20 signup + 5/day daily login) - Best for onboarding & retention
+4. No free coins (purchase-only)
 
-**Recommendation:** Option 1 - Same revenue share (bonus is marketing cost, not creator penalty)
+**User Answer:** "keep option 1 and also add daily login bonus of 5 coins/day only if they login"
 
-**Implementation:** No distinction between purchased and bonus coins when calculating creator earnings
+**Impact:**
+- **Signup bonus:** 20 coins credited once at account creation (90-day expiry)
+- **Daily login bonus:** 5 coins credited every 24 hours if user opens app (90-day expiry)
+- Reduces initial friction (users can try features before purchasing)
+- Drives DAU (daily active users) with login incentive
+- Combined with ₹49 package, creates strong onboarding funnel
+- Database: Add last_login_bonus_at timestamp to coin_wallets table
 
----
-
-### Q9: Gift Category Pricing Strategy
-PRD defines 4 gift categories: Basic (10-50 coins), Premium (100-200), Luxury (500-1000), Exclusive (5000-10000).
-
-**Question:**
-Should gift pricing tiers align with any specific strategy?
-
-**Considerations:**
-1. **Psychological pricing** - End prices in 0 or 5 (10, 20, 50, 100, 500, 1000)
-2. **Value perception** - Higher-tier gifts should feel exclusive
-3. **Call rate equivalency** - 500-coin gift = ~62 minutes at ₹8/min (reference point)
-
-**Question:** Are the gift price points (10, 20, 50, 100, 150, 200, 500, 1000, 5000, 10000) optimal?
-
-**Recommendation:** Keep PRD's price points (psychologically sound)
-
-**Additional Question:** Should we add mid-tier gifts (₹250-400 range)?
+**Decision Recorded:** REQ-CE-011 - Daily login bonus program (20 signup + 5/day)
 
 ---
 
-## Summary of Critical Decisions Needed
+### Q8: Refund Policy
 
-### Must-Resolve Before Requirements Extraction:
+**Context:** PRD states "Refunds only within 7 days for technical issues, unused coins only". Need to clarify refund enforcement.
 
-1. **Q1 (CRITICAL):** Correct revenue split to 75-85% tiered model (vs PRD's 45%)
-2. **Q2:** Implement creator-set rates (₹8-25/min) vs fixed tier rates
-3. **Q3:** Include ₹49 package or start at ₹99 minimum
-4. **Q4:** Coin expiry tracking method (separate balances vs transaction-level)
-5. **Q5:** Refund policy enforcement (technical issues only vs proportional)
-6. **Q6:** Peak hour pricing (apply to creator rates or not)
-7. **Q7:** Confirm 1 coin = ₹1 for spending calculations
-8. **Q8:** Bonus coins revenue share (same 75-85% or different)
-9. **Q9:** Gift pricing optimization (keep current or adjust)
+**Question:** How strict should the refund policy be?
 
-### Recommended Decisions:
-- **Q1:** Correct to 75-85% (aligns with all approved requirements)
-- **Q2:** Creator-set rates (already approved and implemented)
-- **Q3:** User preference (₹49 trial vs ₹99 minimum)
-- **Q4:** Separate balance fields (simplest UX)
-- **Q5:** Technical issues only (clear policy)
-- **Q6:** No peak pricing (creator rates fixed 24/7)
-- **Q7:** Confirm 1 coin = ₹1
-- **Q8:** Same revenue share (fair to creators)
-- **Q9:** Keep current price points
+**Options Provided:**
+1. Technical issues only - Support verifies technical problem (e.g., coins not credited)
+2. All-or-nothing - Refund only if 100% of coins unused
+3. Non-refundable (virtual goods policy) - Standard for virtual currency platforms
+4. Proportional - Refund value of unused coins
+
+**User Answer:** "Non-refundable (virtual goods policy)"
+
+**Impact:**
+- Virtual goods are non-refundable (industry standard)
+- Exceptions: Only technical issues verified by support (payment succeeded but coins not credited)
+- 7-day window for technical issue refunds
+- Prevents abuse (users buying coins, using them, requesting refund)
+- Clear policy: "All coin purchases are final. Refunds only for verified technical issues preventing coin use."
+
+**Decision Recorded:** REQ-CE-008 - Technical refunds only policy (strict enforcement)
+
+---
+
+### Q9: Pricing Transparency
+
+**Context:** Should we show rupee value alongside coin prices to help users understand real value?
+
+**Question:** How should we display coin pricing and value?
+
+**Options Provided:**
+1. Coins only - Show prices in coins (e.g., "10 coins")
+2. Transparent: Show rupee value (Recommended) - Show "10 coins (₹10 value)" for clarity
+3. Hide value - Don't show rupee equivalent (obscures value)
+
+**User Answer:** "Transparent: Show rupee value (Recommended)"
+
+**Impact:**
+- **Gift display:** "Rose: 10 coins (₹10 value) → Creator earns ₹4.50"
+- **Call rates:** "₹12/min (12 coins/min)"
+- **Coin packages:** "₹99 = 100 coins (₹1/coin when spent)"
+- Users clearly understand value (1 coin = ₹1 when spent)
+- Transparency builds trust, reduces confusion
+- UI shows both coins AND rupee value consistently
+
+**Decision Recorded:** Transparency requirement added across REQ-CE-001, REQ-CE-003, REQ-CE-004
+
+---
+
+## Summary of Decisions
+
+### Core Model Changes:
+1. **Dual Revenue Model:** Calls use 75-85% tiered, Gifts use 45% fixed
+2. **Creator-Set Rates:** No fixed tier rates, creators control pricing
+3. **No Surge Pricing:** Creator rates fixed 24/7
+
+### Package & Catalog:
+4. **6 Coin Packages:** ₹49-₹1999 (including entry-level ₹49)
+5. **10 Gifts:** Per PRD catalog (removed mid-tier additions)
+6. **Expiry Rules:** 365d/90d/30d per PRD
+
+### Free Coins & Policies:
+7. **Login Bonuses:** 20 coins signup + 5 coins/day daily login
+8. **Refund Policy:** Non-refundable (virtual goods), technical issues only
+9. **Transparency:** Show rupee value alongside coins everywhere
+
+---
+
+## Requirements Generated
+
+Based on these answers, 11 requirements were created/updated:
+
+1. **REQ-CE-001:** Coin Package Pricing (6 packages: ₹49-₹1999)
+2. **REQ-CE-002:** Dual Revenue Split Model (75-85% calls, 45% gifts)
+3. **REQ-CE-003:** Creator-Set Call Rates (₹8-25/min, no tiers)
+4. **REQ-CE-004:** Gift Pricing (10 gifts, 45% fixed revenue)
+5. **REQ-CE-005:** Three-Tier Balance Tracking (purchased/bonus/promo)
+6. **REQ-CE-006:** 1 Coin = ₹1 Spending Standard
+7. **REQ-CE-007:** Bonus Coins Equal Revenue Share
+8. **REQ-CE-008:** Technical Refunds Only Policy
+9. **REQ-CE-009:** No Peak Hour Pricing
+10. **REQ-CE-010:** Coin Economy Analytics & Monitoring
+11. **REQ-CE-011:** Daily Login Bonus Program (NEW - added from Q7)
 
 ---
 
 **Next Steps:**
-1. User answers Q1-Q9
-2. Extract 8-10 requirements based on answers
-3. Create coin economy requirements document
-4. Present Section 9 demo for approval
+1. Update .metadata.json to mark Section 9 as completed (11 requirements, 9 questions)
+2. Update CHANGELOG.md with Section 9 updates
+3. Continue to final deliverables (master-index.md, dependency-graph.md)
