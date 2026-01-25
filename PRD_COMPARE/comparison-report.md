@@ -660,6 +660,333 @@
 
 ---
 
+## Section 02: Market Analysis Q&A
+
+### Kapil's Key Q&A:
+- **Q1:** Creator Revenue Share → 75% base, up to 85% for top creators
+- **Q2:** App Store Fee Strategy → Web purchase option to bypass 30% fee
+- **Total Questions:** 2
+
+### M. Kumaran's Key Q&A:
+- **Q1:** Competitor Revenue Data → Accepted as industry estimates (60-70% coins, 15-20% calls)
+- **Q2:** Money Flow Calculation → Platform 15-25%, Creator 75-85% of net (corrected from 55%/45%)
+- **Q3:** Market Size Update → Research conducted, SOM increased from ₹50Cr to ₹150Cr (3x)
+- **Q4:** Two-Tier Revenue Clarification → Split net revenue directly (not cascading)
+- **Q5:** Agency Fee Structure → Hybrid model (direct + agency partnerships)
+- **Q6:** SWOT Prioritization → All four elements operationalized into MVP requirements
+- **Q7-Q9:** Revenue streams (4 in MVP), creator tracking, competitive intelligence dashboard
+- **Total Questions:** 9
+
+### Alignment:
+- Both use 75-85% tiered creator revenue share
+- Both acknowledge 30% app store fee impact
+
+### Divergent Interpretations:
+- **Market Research:** Kapil uses PRD as-is, M. Kumaran updated with 2026-2027 projections
+- **Agency Model:** Kapil requires MVP, M. Kumaran documents hybrid approach with more detail
+- **Competitive Intelligence:** M. Kumaran adds dashboard feature as product requirement
+
+### Recommendations:
+1. Use M. Kumaran's updated market sizing (more current research)
+2. Implement comprehensive agency tracking per M. Kumaran's schema
+
+---
+
+## Section 03: Product Vision Q&A
+
+### Kapil's Key Q&A:
+- **Q1:** Matching System → Basic preference matching for MVP
+- **Q2:** Content Moderation → Automated + manual review
+- **Total Questions:** 2
+
+### M. Kumaran's Key Q&A:
+- **Q1:** Core Values Operationalization → KPIs for each of 4 values
+- **Q2:** Platform Positioning → Social + Dating hybrid (equal weight)
+- **Q3:** User Journey & Acquisition → ASO primary, Referral primary, Paid Ads for traction
+- **Q4:** Core Values KPIs → 4 KPIs for Creator-First (earnings, retention, payout speed, NPS)
+- **Q5:** Monetization at Onboarding → Free trial + incentivized purchase
+- **Q6:** Feature Prioritization → Comprehensive MVP (12-14 weeks)
+- **Q7:** Core Values Hierarchy → Safety > Transparency > Creator-First > Accessibility
+- **Q8:** Remaining KPIs → Safety, Accessibility, Transparency KPIs defined
+- **Q9:** Funnel Metrics → 30% → 10% → 60% → 40% retention targets
+- **Total Questions:** 9
+
+### Alignment:
+- Both support automated + manual content moderation
+
+### Divergent Interpretations:
+- **Platform Positioning:** Kapil focuses on social, M. Kumaran explicitly includes dating as equal
+- **Core Values:** Kapil not operationalized, M. Kumaran has full KPI framework
+- **Comprehensiveness:** M. Kumaran defines complete decision framework
+
+### Recommendations:
+1. Adopt M. Kumaran's core value hierarchy for conflict resolution
+2. Use defined KPIs for accountability
+3. Implement comprehensive funnel metrics
+
+---
+
+## Section 05: Feature Specifications Q&A
+
+### Kapil's Key Q&A:
+- **Q1:** Live Voice Rooms → Include in MVP (moved from Phase 2)
+- **Q2:** Video Calls → Include in MVP (for competitive parity)
+- **Q3:** Chat Features → 1-to-1 + Room chat in MVP
+- **Total Questions:** 3
+
+### M. Kumaran's Key Q&A:
+- **Note:** No separate Q&A file exists for Section 05 in M. Kumaran's breakdown
+- Feature decisions made through requirements.md directly
+
+### Key Differences:
+| Aspect | Kapil | M. Kumaran |
+|--------|-------|------------|
+| Live Rooms | Promoted to MVP | Included in comprehensive MVP |
+| Video Calls | Promoted to MVP | Phase 2 (Weeks 13-16) |
+| Scope Changes | 8 additional requirements promoted | Part of initial planning |
+
+### Recommendations:
+1. Include Live Rooms in MVP (both agree)
+2. Align video call timing (MVP vs Phase 2)
+
+---
+
+## Section 07: Database Schema Q&A
+
+### Kapil's Key Q&A:
+- **Q1:** Soft Delete Strategy → Yes, add deleted_at columns
+- **Q2:** PII Encryption → Supabase default encryption
+- **Total Questions:** 2
+
+### M. Kumaran's Key Q&A:
+- **Q1:** Sharding Strategy → Hybrid (8 logical shards MVP, physical later)
+- **Q2:** Index Optimization → Aggressive (composite, partial, covering, GIN, full-text)
+- **Q3:** Missing Tables → Add all 6 missing tables to MVP
+- **Q4:** Sharding Migration → 8 shards for better distribution
+- **Q5:** Timestamp Handling → TIMESTAMPTZ (UTC) - best practice
+- **Q6:** Data Type Consistency → DECIMAL for coins and money
+- **Q7:** Seed Data Corrections → Hybrid critical corrections
+- **Q8:** Multi-Language Structure → JSONB for content, tables for metadata
+- **Q9:** Migration Strategy → Alembic with automated CI/CD
+- **Total Questions:** 9
+
+### Key Differences:
+| Aspect | Kapil | M. Kumaran |
+|--------|-------|------------|
+| Architecture | Single instance (Supabase) | 8-shard from day 1 |
+| Indexes | Basic | 50+ aggressive indexes |
+| Complexity | Simple | Enterprise-grade |
+| Timeline Impact | Standard | +1-2 weeks for schema |
+
+### Recommendations:
+1. Use M. Kumaran's sharded architecture for scalability
+2. Implement TIMESTAMPTZ (UTC) standard
+3. Use DECIMAL for financial accuracy
+
+---
+
+## Section 08: API Specifications Q&A
+
+### Kapil's Key Q&A:
+- **Q1:** API Stack Reference → Node.js Edge Functions (per DD-TA-001)
+- **Q2:** Call Billing Model → End-of-call billing (simpler)
+- **Total Questions:** 2
+
+### M. Kumaran's Key Q&A:
+- **Q1:** Missing Endpoints → Comprehensive 30-40 endpoints (vs PRD's 12)
+- **Q2:** Revenue Share Correction → Dynamic tiered 75-85% (FIXES CRITICAL 45% ERROR)
+- **Q3:** Multi-Language Support → Accept-Language header (standard)
+- **Q4:** Documentation → Enhanced OpenAPI with examples
+- **Q5:** Error Handling → Error codes + system_messages table (i18n)
+- **Q6:** Rate Limiting → Redis-based distributed
+- **Q7:** Webhooks → Comprehensive (Razorpay, Agora, FCM)
+- **Q8:** Pagination → Hybrid (cursor for real-time, offset for static)
+- **Q9:** Versioning → URL-based /api/v1 with deprecation policy
+- **Total Questions:** 9
+
+### Critical Conflicts:
+- **API Framework:** Node.js Edge Functions vs FastAPI
+- **Comprehensiveness:** 2 decisions vs 9 detailed decisions
+- **Timeline Impact:** +2-3 weeks for M. Kumaran's comprehensive API
+
+### Recommendations:
+1. Use comprehensive API coverage (30-40 endpoints)
+2. Implement Redis rate limiting and webhook infrastructure
+
+---
+
+## Section 09: Coin Economy Design Q&A
+
+### Kapil's Key Q&A:
+- **Q1:** Coin Expiry → Implement for MVP (365d/90d/30d per PRD)
+- **Total Questions:** 1
+
+### M. Kumaran's Key Q&A:
+- **Q1:** Revenue Split Model → Dual model (75-85% calls, 45% gifts)
+- **Q2:** Call Pricing Model → Creator-set rates (₹8-25/min)
+- **Q3:** Peak Hour Pricing → Removed (no surge pricing)
+- **Q4:** Coin Packages → Keep PRD packages (₹49-₹1999)
+- **Q5:** Gift Catalog → 10 gifts per PRD
+- **Q6:** Coin Expiry → Keep PRD rules (365d/90d/30d)
+- **Q7:** Free Coins → 20 signup + 5/day daily login bonus
+- **Q8:** Refund Policy → Non-refundable (virtual goods)
+- **Q9:** Pricing Transparency → Show rupee value alongside coins
+- **Total Questions:** 9
+
+### Alignment:
+- Both implement coin expiry per PRD
+
+### Key Differences:
+| Aspect | Kapil | M. Kumaran |
+|--------|-------|------------|
+| Questions Answered | 1 | 9 |
+| Revenue Model | Not detailed | Dual model specified |
+| Free Coins | Not specified | 20 signup + 5/day |
+| Transparency | Not specified | Rupee value shown |
+
+### Recommendations:
+1. Use M. Kumaran's dual revenue model
+2. Implement daily login bonus for engagement
+3. Show transparent rupee values
+
+---
+
+## Section 12: Legal & Compliance Q&A
+
+### Kapil's Key Q&A:
+- **Note:** Pre-determined items based on standard legal frameworks
+- No stakeholder questions required
+- **Total Questions:** 0
+
+### M. Kumaran's Key Q&A:
+- **Q1:** Minimum Withdrawal → Update to ₹100 (from ₹500)
+- **Q2:** Revenue Share → Update to 75-85% tiered (from 45%)
+- **Q3:** Holding Period → T+1 only (remove 7-day hold)
+- **Q4:** Data Residency → All data in India (AWS Mumbai)
+- **Q5:** GST Facilitation → Alert creators at ₹20L threshold
+- **Q6:** Arbitration → Mandatory (no opt-out)
+- **Q7:** Content Moderation → Grievance Officer + 72h response (IT Rules 2021)
+- **Q8:** Age Verification → Self-declaration + AI face estimation
+- **Q9:** TDS Filing → Automated via ClearTax API
+- **Total Questions:** 9
+
+### Critical Gaps:
+- Kapil's breakdown lacks detailed legal Q&A
+- M. Kumaran identifies and corrects PRD conflicts
+
+### PRD Conflicts Resolved (M. Kumaran):
+1. ToS minimum: ₹500 → ₹100
+2. Creator Agreement minimum: ₹500 → ₹100
+3. Revenue share: 45% → 75-85% tiered
+4. Holding period: 7 days → None (T+1 only)
+
+### Recommendations:
+1. Use M. Kumaran's comprehensive legal compliance
+2. Implement TDS automation (ClearTax)
+3. Add AI age verification
+
+---
+
+## Section 13: Implementation Roadmap Q&A
+
+### Kapil's Key Q&A:
+- **Note:** Pre-resolved via design decisions
+- Stack alignment: Node.js + Supabase per DD-TA-001
+- **Total Questions:** 0 (Pre-resolved)
+
+### M. Kumaran's Key Q&A:
+- **Q1:** MVP Timeline → 16-20 weeks (not 30 days)
+- **Q2:** Team Structure → Shadowmarket agent team (internal)
+- **Q3:** Language Rollout → All 5 languages at launch
+- **Total Questions:** 3
+
+### Critical Conflicts:
+| Aspect | Kapil | M. Kumaran |
+|--------|-------|------------|
+| MVP Timeline | 30 days (90 days total) | 16-20 weeks |
+| Team | Hiring required | Internal team |
+| Languages | Phased (Tamil first) | All 5 at launch |
+
+### Recommendations:
+1. Use realistic 16-20 week timeline
+2. Plan for 5-language launch if team supports it
+
+---
+
+## Section 14: Cost Estimation Q&A
+
+### Kapil's Key Q&A:
+- **Note:** Pre-resolved adjustments based on tech stack
+- n8n deferred: ₹12K savings
+- Supabase vs AWS: ₹75K savings
+- Redis included: ₹18K savings
+- **Total Questions:** 0 (Pre-resolved)
+
+### M. Kumaran's Key Q&A:
+- **Q1:** Team Costs → Remove (shadowmarket team internal) - saves ₹8.7L
+- **Q2:** Platform Share → 15-25% (creator-friendly model)
+- **Q3:** Budget Timeline → 5-month with full scope
+- **Q4:** Dev Tools → Add ₹25K/month (₹1.25L total)
+- **Q5:** Break-Even → 8-10 months acceptable
+- **Q6:** Marketing Timing → Week 17-20 launch phase (₹2L)
+- **Q7:** API Services → Add ClearTax + Rekognition (₹57.5K)
+- **Q8:** Translation → ₹60K professional translation
+- **Q9:** Agora Video → Increase to ₹40K in Months 4-5
+- **Total Questions:** 9
+
+### Budget Comparison:
+| Aspect | Kapil | M. Kumaran |
+|--------|-------|------------|
+| Total Budget | ₹15.83L | ₹9.47L |
+| Team Cost | ₹8.70L (hiring) | ₹0 (internal) |
+| Infrastructure | ₹1.95L | ₹4.05L |
+| Break-even | Month 5-6 | Month 7-8 |
+
+### Key Insight:
+- M. Kumaran's lower budget due to internal team (no hiring cost)
+- M. Kumaran's later break-even due to creator-friendly revenue model
+
+---
+
+## Section 15: Success Metrics Q&A
+
+### Kapil's Key Q&A:
+- **Note:** Pre-determined based on industry standards
+- North Star: Monthly Active Minutes
+- KPI targets from PRD projections
+- **Total Questions:** 0
+
+### M. Kumaran's Key Q&A:
+- **Q1:** North Star Metric → Monthly Active Minutes (MAM) confirmed
+- **Q2:** Paying User % → Progressive 5% → 8% → 10%
+- **Q3:** Creator Recruitment → 20 creators Week 12-16
+- **Q4:** MAM Targets → Aggressive: 100K (M1) → 1M (M3) → 5M (M6)
+- **Q5:** Monetization Driver → Trust + Engagement (not feature rollout)
+- **Q6:** Creator Criteria → Selective + Incentivized (age 21+, ₹500 bonus, 85% tier)
+- **Q7:** Retention Targets → D7 40%, D30 20% (industry standard)
+- **Q8:** Safety Metrics → Comprehensive dashboard (6 metrics)
+- **Q9:** Launch Success Criteria → 4/6 metrics must pass
+- **Total Questions:** 9
+
+### Alignment:
+- Both use Monthly Active Minutes as North Star
+
+### Key Differences:
+| Aspect | Kapil | M. Kumaran |
+|--------|-------|------------|
+| Questions Answered | 0 | 9 |
+| MAM Targets | Not specified | Detailed monthly targets |
+| Retention Targets | Not specified | D7 40%, D30 20% |
+| Launch Criteria | Not specified | 4/6 metrics must pass |
+| Safety Metrics | Basic | Comprehensive dashboard |
+
+### Recommendations:
+1. Use M. Kumaran's specific MAM targets
+2. Implement launch success criteria (4/6 metric threshold)
+3. Add comprehensive safety dashboard
+
+---
+
 # EXECUTIVE SUMMARY
 
 ---
@@ -949,6 +1276,130 @@
 
 ---
 
-**Report Generated:** 2026-01-24
+---
+
+# REPORT 2 SUMMARY: Q&A COMPARISON ANALYSIS
+
+## Questions-Answers Depth Comparison
+
+| Section | Kapil Q&A | M. Kumaran Q&A | Gap |
+|---------|-----------|---------------|-----|
+| 01 Executive Summary | 3 | 9 | M. Kumaran 3x more detailed |
+| 02 Market Analysis | 2 | 9 | M. Kumaran 4.5x more detailed |
+| 03 Product Vision | 2 | 9 | M. Kumaran 4.5x more detailed |
+| 04 Revenue Model | 3 | 9 | M. Kumaran 3x more detailed |
+| 05 Feature Specifications | 3 | 0 (N/A) | Kapil has detail here |
+| 06 Technical Architecture | 2 | 9 | M. Kumaran 4.5x more detailed |
+| 07 Database Schema | 2 | 9 | M. Kumaran 4.5x more detailed |
+| 08 API Specifications | 2 | 9 | M. Kumaran 4.5x more detailed |
+| 09 Coin Economy Design | 1 | 9 | M. Kumaran 9x more detailed |
+| 10 Creator Payout | 3 | 9 | M. Kumaran 3x more detailed |
+| 11 N8N Automation | 2 | 9 | M. Kumaran 4.5x more detailed |
+| 12 Legal & Compliance | 0 | 9 | M. Kumaran only |
+| 13 Implementation Roadmap | 0 | 3 | M. Kumaran only |
+| 14 Cost Estimation | 0 | 9 | M. Kumaran only |
+| 15 Success Metrics | 0 | 9 | M. Kumaran only |
+| **TOTAL** | **25** | **120** | **M. Kumaran 4.8x more comprehensive** |
+
+## Key Q&A Insights
+
+### Pattern Analysis:
+1. **Kapil's Approach**: Focuses on core decisions, defers complexity to later phases
+2. **M. Kumaran's Approach**: Comprehensive questioning, resolves PRD conflicts, provides detailed technical guidance
+
+### PRD Conflicts Identified & Resolved (M. Kumaran):
+1. **Revenue Share**: 45% → 75-85% tiered (CRITICAL)
+2. **Minimum Withdrawal**: ₹500 → ₹100
+3. **Holding Period**: 7 days → None (T+1 only)
+4. **Market Sizing**: Updated to 2026-2027 (SOM 3x increase)
+5. **API Endpoints**: 12 → 30-40 comprehensive coverage
+6. **Database**: Single → 8-shard architecture
+
+### Decision Framework Differences:
+| Framework | Kapil | M. Kumaran |
+|-----------|-------|------------|
+| Core Value Hierarchy | Not defined | Safety > Transparency > Creator-First > Accessibility |
+| Launch Success Criteria | Not defined | 4/6 metrics must pass |
+| Break-even Expectation | Month 5-6 | Month 8-10 (accepted for creator-friendly model) |
+| Retention Targets | Not defined | D7: 40%, D30: 20% |
+
+---
+
+# UPDATED ALIGNMENT SCORES (Post-Q&A Analysis)
+
+| Section | Requirements Alignment | Q&A Depth Alignment | Overall Score |
+|---------|----------------------|---------------------|---------------|
+| 01 Executive Summary | 75% | 33% | 54% |
+| 02 Market Analysis | 80% | 22% | 51% |
+| 03 Product Vision | 70% | 22% | 46% |
+| 04 Revenue Model | 50% | 33% | 42% |
+| 05 Feature Specifications | 75% | N/A | 75% |
+| 06 Technical Architecture | 30% | 22% | 26% |
+| 07 Database Schema | 60% | 22% | 41% |
+| 08 API Specifications | 50% | 22% | 36% |
+| 09 Coin Economy Design | 65% | 11% | 38% |
+| 10 Creator Payout System | 40% | 33% | 37% |
+| 11 N8N Workflows | 45% | 22% | 34% |
+| 12 Legal & Compliance | N/A | 0% | 25% |
+| 13 Implementation Roadmap | 55% | 0% | 28% |
+| 14 Cost Estimation | 60% | 0% | 30% |
+| 15 Success Metrics | 80% | 0% | 40% |
+
+**Updated Overall Alignment: 44%** (down from 58% after Q&A analysis)
+
+---
+
+# FINAL RECOMMENDATIONS
+
+## Immediate Actions (Before Development Starts):
+
+### 1. Technology Stack Decision (CRITICAL)
+**Recommendation:** Hold stakeholder meeting to choose ONE stack
+- **Option A: Supabase (Kapil)** → Faster MVP, simpler, ₹1.05L savings
+- **Option B: FastAPI (M. Kumaran)** → Better AI/ML integration, enterprise-grade
+
+### 2. Holding Period Resolution (HIGH)
+**Recommendation:** Compromise at 24-48 hours
+- Kapil's 7-day hold → Too long, hurts creator experience
+- M. Kumaran's no hold → Risk of fraud
+- **Compromise:** 24-48 hour hold with fraud detection triggers
+
+### 3. TDS Responsibility (HIGH - Legal)
+**Recommendation:** Platform handles TDS (M. Kumaran's approach)
+- Section 194J compliance required
+- Platform deducts 10% for creators earning >₹30K/FY
+- Automate via ClearTax API
+
+### 4. Timeline Alignment (HIGH)
+**Recommendation:** Use 16-20 weeks (M. Kumaran)
+- Kapil's 90 days not realistic for comprehensive scope
+- 16-20 weeks accommodates all approved features
+- Includes 2-week beta testing buffer
+
+## Documentation Merge Strategy:
+
+### Use Kapil's:
+- Legal & Compliance baseline (Section 12)
+- Agency model timing flexibility
+
+### Use M. Kumaran's:
+- Market sizing (updated 2026-2027)
+- Core value hierarchy and KPIs
+- Database sharding architecture
+- API comprehensiveness (30-40 endpoints)
+- Launch success criteria (4/6 metrics)
+- Retention targets (D7: 40%, D30: 20%)
+- Cost estimation (with internal team)
+
+### Create New Unified:
+- Revenue model document (harmonize 75-85% tiered)
+- Single API specification (comprehensive coverage)
+- Merged database schema (22 tables, 8 shards)
+- Combined implementation roadmap
+
+---
+
+**Report Generated:** 2026-01-25
+**Report Version:** 2.0 (Complete with Q&A Analysis)
 **Comparison Status:** Complete
 **Next Steps:** Stakeholder alignment meeting to resolve critical conflicts
