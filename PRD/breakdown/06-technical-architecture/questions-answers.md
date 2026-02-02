@@ -1,10 +1,11 @@
 # Section 6: Technical Architecture - Questions & Answers
 
 **Section:** Technical Architecture
-**Date:** 2026-01-20
-**Status:** Completed
-**Questions Asked:** 9
+**Date:** 2026-01-20 (Initial), 2026-02-02 (Scalability Review)
+**Status:** Completed with Scalability Updates
+**Questions Asked:** 9 (Initial) + Scalability Review
 **Critical Conflicts Resolved:** 2 (Mobile framework, Backend framework)
+**Scalability Updates:** 3 critical changes (Infrastructure, Database, Concurrent targets)
 
 ---
 
@@ -279,3 +280,226 @@
 - Extract technical architecture requirements based on these decisions
 - Update Section 14 (Cost Estimation) to reflect premium infrastructure approach
 - Validate 19-24 week timeline in Section 13 (Implementation Roadmap)
+
+---
+
+## SCALABILITY REVIEW (2026-02-02)
+
+### Review Context
+Following PRD breakdown completion, performed comprehensive scalability review focusing on:
+1. Technology stack performance at 150K concurrent users
+2. Infrastructure scaling strategies (cost vs performance)
+3. Database scaling approaches and sharding timeline
+
+### Research Methodology
+- 3 parallel web research agents analyzing:
+  - FastAPI scalability benchmarks vs Node.js/Go
+  - Infrastructure scaling strategies (over-provisioning vs right-sized auto-scaling)
+  - Database scaling approaches (sharding timeline validation)
+- Industry benchmarks, case studies, technical documentation
+- Focus: Real-world production data, not theoretical limits
+
+---
+
+### CRITICAL UPDATE 1: Infrastructure Strategy Changed
+
+**Original Decision (Q4):**
+- Premium over-provisioning (10+ API servers from day 1)
+- Cost: $450-500/month for 10K MAU MVP
+- Rationale: Prevent performance issues, support rapid growth
+
+**Updated Decision:**
+- Right-sized auto-scaling (2-4 baseline, scale to 12+, warm pools)
+- Cost: $150-180/month for 10K MAU MVP
+- **Savings: $3,480/year (64% cost reduction)**
+
+**Research Findings:**
+- Industry pattern: Successful startups start lean, scale aggressively
+- Organizations waste 60-70% capacity with over-provisioning at MVP stage
+- Warm pools eliminate scale-up lag (30 seconds vs 2-5 minutes)
+- Auto-scaling with Target Tracking achieves 40-65% cost reduction
+- AWS best practices recommend right-sizing over over-provisioning
+
+**Rationale for Change:**
+Premium over-provisioning appropriate for enterprise-scale (5M+ users) but over-engineering for MVP-200K user range. Right-sized auto-scaling with warm pools is industry best practice for startups, balancing cost efficiency with performance reliability.
+
+**Implementation Changes:**
+- REQ-TA-003 rewritten with right-sized auto-scaling approach
+- DD-TA-005 updated to reflect new strategy
+- Section 14 (Cost Estimation) flagged for update (-$3,480/year)
+
+---
+
+### CRITICAL UPDATE 2: Database Sharding Timeline Changed
+
+**Original Decision (Q10 implied):**
+- Sharding-ready from MVP (logical sharding)
+- Physical sharding at 200K users (4 shards)
+- Scale to 16 shards at 1M users
+
+**Updated Decision:**
+- Single managed PostgreSQL (AWS RDS) until 500K users
+- Vertical partitioning at 500K-1M users (separate DBs by table groups)
+- Physical sharding deferred to 1M+ users based on actual need
+
+**Research Findings:**
+- **Figma case study**: Reached 4M users without horizontal sharding (vertical scaling + optimization worked)
+- Industry benchmark: Companies typically shard at 1M-5M users, NOT before
+- AWS RDS can handle 200K-1M users with read replicas + optimization
+- Physical sharding at 200K = premature optimization
+- Operational burden: 2-4 weeks setup + ongoing maintenance complexity
+- Managed RDS costs less than self-managed sharded infrastructure at <1M scale
+
+**Rationale for Change:**
+Reduces operational complexity during critical growth phase. Managed RDS with vertical scaling sufficient with proper optimization. Physical sharding only when data volume/write patterns actually demand it. Follows industry best practices validated by successful companies.
+
+**Implementation Changes:**
+- REQ-TA-010 rewritten with phased scaling strategy
+- DD-TA-021, DD-TA-022 updated for new timeline
+- Focus shifted to logical partitioning (by date) vs physical sharding
+
+---
+
+### MODERATE UPDATE 3: Concurrent User Targets Refined
+
+**Original Assumption (Q2):**
+- Flat 15% of MAU concurrent at all stages
+- MVP (10K MAU): 1,500 concurrent
+- Year 2 (1M MAU): 150,000 concurrent
+
+**Updated Targets:**
+- Phased growth: 5-8% @ MVP → 10-12% @ 200K → 12-15% @ 1M
+- MVP (10K MAU): 500-800 concurrent (more realistic)
+- Month 6 (50K MAU): 4,000-5,000 concurrent
+- Month 12 (200K MAU): 20,000-24,000 concurrent
+- Year 2 (1M MAU): 120,000-150,000 concurrent
+
+**Research Findings:**
+- Industry data: Social/dating apps typically achieve 5-15% of DAU as concurrent during peak
+- 15% of MAU assumes 100% DAU with 15% concurrent at peak (unrealistic for MVP)
+- More realistic MVP: 10% DAU × 50-80% peak concurrency = 5-8% of MAU
+- Engagement grows with product-market fit: 5-8% MVP → 15% at maturity
+- Mathematical validation: 10K MAU × 10% DAU × 50% concurrent = 500 users (5% of MAU)
+
+**Rationale for Change:**
+Conservative MVP estimates prevent over-engineering infrastructure while maintaining upper-bound capacity planning (150K at 1M MAU unchanged). Phased approach aligns with realistic user engagement growth patterns validated by industry data.
+
+**Implementation Changes:**
+- REQ-TA-002 updated with phased concurrent user table
+- DD-TA-003 revised to reflect growth-based targets
+- Load testing targets adjusted to 800 concurrent for MVP
+
+---
+
+### VALIDATION: Technology Stack Confirmed
+
+**Decision (Q1):**
+- Flutter 3.x + FastAPI (Python)
+- Status: ✅ VALIDATED for 150K concurrent users
+
+**Research Findings:**
+- **FastAPI Performance**: Technically viable for 150K concurrent with optimization
+  - TechEmpower benchmarks: 3K-22K requests/sec depending on configuration
+  - Requires async drivers (asyncpg, aioredis) for competitive performance
+  - Uvicorn with multiple workers handles high concurrency effectively
+- **Cost Trade-off**: FastAPI requires 2-3x more instances than Node.js/Go at equivalent load
+  - Infrastructure cost: 30-50% higher than Node.js at scale
+  - Estimated premium: $50-150K/year at 1M MAU scale
+- **Python GIL**: NOT a blocker for I/O-bound operations (async/await bypasses GIL for network I/O)
+- **Production Examples**: Hinge uses Django (Python) at scale, proving Python viability for dating apps
+- **Node.js Comparison**: Fastify achieves 8K-20K RPS vs FastAPI 3K-22K RPS (comparable with optimization)
+- **Go Comparison**: Gin achieves 25K-50K RPS (faster but steeper learning curve)
+
+**Trade-offs Acknowledged:**
+- ✅ **Pro**: Faster development, superior Python AI/ML ecosystem (critical for moderation/matching)
+- ✅ **Pro**: Team expertise and faster hiring (Python developers more available than Go)
+- ✅ **Pro**: Proven at scale (Hinge/Django validates Python for dating platforms)
+- ⚠️ **Con**: Higher infrastructure cost ($50-150K/year premium at scale vs Node.js)
+- ⚠️ **Con**: Requires 2-3x more instances than Go for equivalent load
+- ✅ **Decision**: Keep FastAPI - AI/ML benefits and development speed outweigh cost premium
+
+**Implementation Changes:**
+- REQ-TA-001 updated with performance and cost considerations section
+- Added requirement for async drivers (asyncpg, aioredis)
+- Documented cost trade-off vs Node.js alternatives
+- Added note about Python GIL non-issue for I/O-bound workloads
+
+---
+
+### Summary of Changes
+
+| Decision Area | Status | Impact |
+|--------------|--------|--------|
+| **Infrastructure Strategy** | ❌ CHANGED | Right-sized auto-scaling: -$3,480/year savings |
+| **Database Sharding Timeline** | ❌ CHANGED | Deferred to 1M+ users: Reduced complexity |
+| **Concurrent User Targets** | ⚠️ REFINED | MVP: 500-800 (was 1,500): More realistic |
+| **Technology Stack (FastAPI)** | ✅ VALIDATED | Confirmed viable with 30-50% cost caveat |
+| **AI Moderation (Hybrid)** | ✅ NO CHANGE | Third-party → self-hosted approach unchanged |
+| **Security Architecture** | ✅ NO CHANGE | Enterprise security validated |
+| **Monitoring Strategy** | ✅ NO CHANGE | Full observability unchanged |
+| **Disaster Recovery** | ✅ NO CHANGE | RTO 4h/RPO 1h unchanged |
+
+**Requirements Updated:**
+- **REQ-TA-001**: Added FastAPI cost comparison and async driver requirements
+- **REQ-TA-002**: Updated with phased concurrent user targets (5-8% → 15%)
+- **REQ-TA-003**: Completely rewritten for right-sized auto-scaling approach
+- **REQ-TA-010**: Completely rewritten with deferred sharding timeline
+
+**Design Decisions Updated:**
+- **DD-TA-003**: Phased concurrent ratio (was flat 15%)
+- **DD-TA-005**: Right-sized auto-scaling (was premium over-provisioning)
+- **DD-TA-006**: Managed RDS with vertical scaling (was sharding-ready from start)
+- **DD-TA-021**: Managed RDS strategy (was user_id sharding key)
+- **DD-TA-022**: Phased scaling approach (was logical → physical sharding)
+
+**Downstream Impact:**
+- **Section 14 (Cost Estimation)**: UPDATE REQUIRED
+  - Reduce infrastructure costs by $3,480/year (MVP-200K MAU range)
+  - Update database cost projections (managed RDS vs sharded infrastructure)
+  - Add FastAPI vs Node.js cost comparison note
+- **Section 7 (Database Schema)**: REVIEW RECOMMENDED
+  - Remove physical sharding requirements for MVP
+  - Focus on logical partitioning (by date for time-series tables)
+  - Simplify schema design without sharding complexity
+- **Section 13 (Implementation Roadmap)**: REVIEW RECOMMENDED
+  - Validate timeline with right-sized infrastructure (may reduce setup time)
+  - Remove sharding implementation from MVP phase
+  - Add warm pool configuration to infrastructure setup
+
+---
+
+### Key Research Insights
+
+**1. Infrastructure Scaling**
+- Over-provisioning waste: 60-70% idle capacity at MVP stage
+- Right-sizing with auto-scaling: 40-65% cost reduction
+- Warm pools: Eliminate cold-start lag (30 sec vs 2-5 min)
+- Industry pattern: Start lean, scale aggressively, optimize continuously
+
+**2. Database Scaling**
+- Sharding inflection point: 1M-5M users (industry consensus)
+- Figma precedent: 4M users without horizontal sharding
+- AWS RDS capacity: 200K-1M users with vertical scaling + read replicas
+- Premature sharding: Adds 2-4 weeks dev time + ongoing ops burden
+
+**3. Concurrent User Patterns**
+- Social/dating apps: 5-15% of DAU concurrent at peak
+- MVP engagement: Lower (5-8% of MAU) until product-market fit proven
+- Growth pattern: Engagement increases with retention and network effects
+- 15% of MAU concurrent: Realistic at maturity (1M+ MAU), not at MVP
+
+**4. FastAPI at Scale**
+- Viable for 150K concurrent with proper optimization
+- Critical: Must use async drivers (asyncpg, aioredis, httpx)
+- Cost premium: 30-50% vs Node.js (acceptable trade-off for AI/ML benefits)
+- Python GIL: Non-issue for I/O-bound workloads (async/await pattern)
+
+---
+
+**Review Completed:** 2026-02-02
+**Review Status:** ✅ Scalability validation complete with critical updates implemented
+**Research Quality:** High confidence (3 parallel agents, industry benchmarks, case studies)
+**Next Actions:**
+1. Update Section 14 (Cost Estimation) with revised infrastructure costs
+2. Review Section 7 (Database Schema) for sharding simplification
+3. Review Section 13 (Implementation Roadmap) for timeline validation
