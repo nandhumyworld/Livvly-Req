@@ -1,309 +1,277 @@
 # How to Continue: LIVVLY Architecture Workflow
 
-**Last Updated:** 2026-02-02
-**Current Status:** Step 2 of Architecture Workflow (Project Context Analysis) - Ready to append and proceed to Step 3
+**Last Updated:** 2026-02-03
+**Current Status:** Step 5 of Architecture Workflow (Implementation Patterns) - In Progress
 **Project:** LIVVLY Voice Dating App
 
 ---
 
 ## Current Progress Summary
 
-### ✅ Completed Work
+### Completed Steps
 
-1. **PRD Breakdown (100% Complete)**
-   - All 15 sections completed
-   - 203 total requirements documented
-   - 107 design decisions made
-   - 129 questions answered
-   - Location: `PRD/` folder
-   - Index: `PRD/master-index.md`
+| Step | Name                         | Status         | Date       |
+| ---- | ---------------------------- | -------------- | ---------- |
+| 1    | Document Initialization      | ✅ Complete    | 2026-02-02 |
+| 2    | Project Context Analysis     | ✅ Complete    | 2026-02-03 |
+| 3    | Starter Template Evaluation  | ✅ Complete    | 2026-02-03 |
+| 4    | Core Architectural Decisions | ✅ Complete    | 2026-02-03 |
+| 5    | Implementation Patterns      | 🔄 In Progress | 2026-02-03 |
+| 6    | Project Structure            | 📋 Pending     | -          |
+| 7    | Validation                   | 📋 Pending     | -          |
+| 8    | Complete                     | 📋 Pending     | -          |
 
-2. **Scalability Review (Complete)**
-   - Section 6 (Technical Architecture) reviewed and updated
-   - Key changes:
-     - Infrastructure: Changed from premium over-provisioning to right-sized auto-scaling ($3,480/year savings)
-     - Database: Deferred physical sharding to 1M+ users (reduced complexity)
-     - Concurrent users: Phased targets (5-8% MVP → 15% @ 1M MAU)
-     - Technology stack: FastAPI validated with cost caveats
-   - Updated files:
-     - `PRD/breakdown/06-technical-architecture/requirements.md`
-     - `PRD/breakdown/06-technical-architecture/questions-answers.md`
+### Architecture Document Location
 
-3. **Architecture Workflow Started**
-   - Using BMAD workflow: `/bmad-bmm-create-architecture`
-   - Step 1: ✅ Document initialization complete
-   - Step 2: ✅ Project Context Analysis drafted (ready to append)
-   - Location: `_bmad-output/planning-artifacts/architecture.md`
+- **Path:** `_bmad-output/planning-artifacts/architecture.md`
+- **Frontmatter:** `stepsCompleted: [1, 2, 3, 4]`
 
-### 🔄 Current Task (In Progress)
+---
 
-**Step 2: Project Context Analysis - Ready to Finalize**
+## Key Decisions Made (Steps 1-4)
 
-I have drafted comprehensive Project Context Analysis covering:
-- Requirements Overview (203 functional requirements)
-- Non-Functional Requirements (performance, scalability, security)
-- Scale & Complexity Assessment (ENTERPRISE level)
-- Technical Constraints & Dependencies
-- Cross-Cutting Concerns (7 major areas)
+### Step 3: Starter Templates Selected
 
-**Next Action:** Append this analysis to `architecture.md` and proceed to Step 3.
+| Platform            | Starter                               | Repository                                                     |
+| ------------------- | ------------------------------------- | -------------------------------------------------------------- |
+| **Backend**   | fastapi_best_architecture             | https://github.com/fastapi-practices/fastapi_best_architecture |
+| **Mobile**    | Flutter Official + Clean Architecture | `flutter create --org com.livvly`                            |
+| **Structure** | Custom Monorepo                       | `livvly/apps/{mobile,api}`                                   |
+
+### Step 4: Core Decisions Confirmed
+
+| #  | Category          | Decision        | Choice                                               |
+| -- | ----------------- | --------------- | ---------------------------------------------------- |
+| 1  | Data Modeling     | Access Pattern  | Repository Pattern                                   |
+| 2  | Data Architecture | Caching TTLs    | 1h profiles, 30s creator status, 24h gifts           |
+| 3  | Authentication    | JWT Config      | RS256, 1h access / 30d refresh                       |
+| 4  | Authorization     | RBAC Structure  | user / creator / admin roles                         |
+| 5  | API Design        | Response Format | Standardized JSON (`success`, `data`, `error`) |
+| 6  | Real-time         | Communication   | Agora + FCM + API polling                            |
+| 7  | Mobile State      | Management      | Bloc/Cubit                                           |
+| 8  | Mobile Navigation | Router          | GoRouter                                             |
+| 9  | DevOps            | Environments    | Local / Dev / Staging / Prod                         |
+| 10 | Security          | Secrets         | AWS Secrets Manager                                  |
+
+---
+
+## Step 5: Implementation Patterns (In Progress)
+
+### Patterns Proposed (Pending Confirmation)
+
+The following patterns were drafted and need confirmation when resuming:
+
+#### Naming Conventions
+
+| Element       | Backend (Python) | Mobile (Dart) | Database           |
+| ------------- | ---------------- | ------------- | ------------------ |
+| Files         | snake_case       | snake_case    | -                  |
+| Classes       | PascalCase       | PascalCase    | -                  |
+| Functions     | snake_case       | camelCase     | -                  |
+| Variables     | snake_case       | camelCase     | -                  |
+| Tables        | -                | -             | snake_case, plural |
+| Columns       | -                | -             | snake_case         |
+| API Endpoints | snake_case       | -             | -                  |
+| JSON Fields   | snake_case       | -             | -                  |
+
+#### Bloc Event/State Naming
+
+```dart
+// Events: {Domain}{Action}
+UserProfileRequested
+CallInitiated
+
+// States: {Domain}{Status}
+UserProfileLoading
+UserProfileLoaded
+UserProfileError
+```
+
+#### Error Code Pattern
+
+```
+{CATEGORY}_{NUMBER}
+AUTH_001, VALIDATION_001, BUSINESS_001, SYSTEM_001
+```
+
+#### Date/Time Format
+
+- API: ISO 8601 UTC (`"2026-02-03T10:30:00Z"`)
+- Database: TIMESTAMP WITH TIME ZONE (UTC)
+- Display: User's locale (formatted on client)
 
 ---
 
 ## How to Resume
 
-### Option 1: Resume in Current Session
-
-If continuing in the same Claude Code session:
+### Quick Resume (Same Session)
 
 ```
-Continue with Step 2 of the architecture workflow.
-Append the drafted Project Context Analysis to _bmad-output/planning-artifacts/architecture.md
-and proceed to Step 3.
+Continue the architecture workflow from Step 5 (Implementation Patterns).
+The patterns have been proposed - confirm them and save to architecture.md,
+then proceed to Step 6 (Project Structure).
 ```
 
-### Option 2: Resume in New Session/Account
-
-If starting a new Claude Code session or different account:
+### Full Resume (New Session)
 
 ```
-I need to continue the LIVVLY architecture workflow. Here's the context:
+I need to continue the LIVVLY architecture workflow. Context:
 
-1. PRD breakdown is 100% complete (203 requirements across 15 sections)
-   - Location: PRD/ folder
-   - Index: PRD/master-index.md
+1. Architecture document: _bmad-output/planning-artifacts/architecture.md
+2. Steps completed: [1, 2, 3, 4] - currently on Step 5
+3. Step 5 (Implementation Patterns) was in progress with patterns proposed
 
-2. Architecture workflow was started using /bmad-bmm-create-architecture
-   - Current document: _bmad-output/planning-artifacts/architecture.md
-   - Steps completed: [1, 2]
-   - Currently at: Step 2 ready to finalize, then proceed to Step 3
+Please read:
+- continue.md (this file) for current status
+- _bmad-output/planning-artifacts/architecture.md for decisions made
 
-3. Please read the following files to understand context:
-   - PRD/master-index.md (project overview)
-   - PRD/breakdown/06-technical-architecture/requirements.md (tech stack decisions)
-   - PRD/breakdown/06-technical-architecture/questions-answers.md (scalability review)
-   - _bmad-output/planning-artifacts/architecture.md (current architecture doc)
-
-4. Next steps:
-   - Complete Step 2 by appending Project Context Analysis
-   - Load step-03-starter.md from BMAD workflow
-   - Continue with architectural decisions
-
-Please resume the architecture workflow from Step 2.
+Next actions:
+1. Confirm the proposed implementation patterns (naming, events, errors, dates)
+2. Append Step 5 content to architecture.md
+3. Proceed to Step 6 (Project Structure)
 ```
 
 ---
 
-## Key Files and Locations
+## Files Reference
 
-### Input Documents (Read-Only)
-These contain the requirements and context:
+### Architecture Output
 
-1. **PRD Master Index**
-   - Path: `PRD/master-index.md`
-   - Content: Overview of all 15 sections, completion status
-   - Use: High-level project understanding
+| File                                                | Purpose                    | Status             |
+| --------------------------------------------------- | -------------------------- | ------------------ |
+| `_bmad-output/planning-artifacts/architecture.md` | Main architecture document | Steps 1-4 complete |
+| `continue.md`                                     | Session continuation guide | This file          |
 
-2. **Technical Architecture Requirements**
-   - Path: `PRD/breakdown/06-technical-architecture/requirements.md`
-   - Content: 18 requirements (technology stack, infrastructure, performance)
-   - Use: Understand tech stack decisions
+### PRD Input (Read-Only)
 
-3. **Technical Architecture Q&A**
-   - Path: `PRD/breakdown/06-technical-architecture/questions-answers.md`
-   - Content: 9 questions answered + scalability review (2026-02-02)
-   - Use: Understand rationale behind technical decisions
-
-4. **Database Schema Requirements**
-   - Path: `PRD/breakdown/07-database-schema/requirements.md`
-   - Content: 15 requirements, 22 tables, sharding strategy
-   - Use: Understand data architecture
-
-5. **API Specifications**
-   - Path: `PRD/breakdown/08-api-specifications/requirements.md`
-   - Content: 20 requirements, 40+ endpoints
-   - Use: Understand API layer
-
-### Output Document (Work in Progress)
-This is the file being built:
-
-- **Architecture Decision Document**
-  - Path: `_bmad-output/planning-artifacts/architecture.md`
-  - Current Status: Step 2 analysis drafted, needs to be appended
-  - Frontmatter: `stepsCompleted: [1, 2]`
+| File                                                             | Content                   |
+| ---------------------------------------------------------------- | ------------------------- |
+| `PRD/master-index.md`                                          | 203 requirements overview |
+| `PRD/breakdown/06-technical-architecture/requirements.md`      | 18 tech requirements      |
+| `PRD/breakdown/06-technical-architecture/questions-answers.md` | Scalability review        |
+| `PRD/breakdown/07-database-schema/requirements.md`             | 22 tables, indexes        |
+| `PRD/breakdown/08-api-specifications/requirements.md`          | 40+ endpoints             |
 
 ### BMAD Workflow Files
-These guide the architecture creation process:
 
-- Workflow location: `.claude/commands/bmad-bmm-create-architecture.md`
-- Step files: Located in BMAD installation directory
-  - `step-01-init.md` (✅ complete)
-  - `step-02-context.md` (✅ complete)
-  - `step-03-starter.md` (next to load)
-  - Additional steps follow sequentially
-
----
-
-## Project Context (Quick Reference)
-
-### Project Overview
-- **Name:** LIVVLY Voice Dating App
-- **Market:** India's first voice-first dating platform
-- **Target:** Urban Indians 22-35, English + 4 regional languages
-
-### Scale Targets
-- **MVP:** 10K MAU, 500-800 concurrent users
-- **Month 12:** 200K MAU, 20K-24K concurrent
-- **Year 2:** 1M MAU, 120K-150K concurrent
-
-### Technology Stack (Validated)
-- **Mobile:** Flutter 3.x (iOS + Android)
-- **Backend:** FastAPI + Python 3.11+
-- **Database:** PostgreSQL 15 (AWS RDS managed)
-- **Cache:** Redis 7 (Cluster with replication)
-- **Real-time:** Agora SDK (voice/video calls)
-- **Cloud:** AWS (Mumbai primary, Bangalore backup)
-
-### Performance Targets
-- **API Response:** <200ms p95
-- **Call Capacity:** 1,000 simultaneous (MVP) → 25,000 (Year 2)
-- **Concurrent Users:** Phased 5-8% (MVP) → 12-15% (1M MAU)
-
-### Key Technical Decisions
-1. **Right-sized auto-scaling** (not over-provisioning) - $3,480/year savings
-2. **Deferred database sharding** (physical sharding at 1M+ users, not 200K)
-3. **FastAPI validated** for 150K concurrent (30-50% higher infra cost vs Node.js)
-4. **Multi-language support** (English, Hindi, Tamil, Telugu, Bengali)
-5. **Enterprise security** (PCI DSS compliance, E2E encryption)
+| Step   | File Location                                                                         |
+| ------ | ------------------------------------------------------------------------------------- |
+| Step 5 | `_bmad/bmm/workflows/3-solutioning/create-architecture/steps/step-05-patterns.md`   |
+| Step 6 | `_bmad/bmm/workflows/3-solutioning/create-architecture/steps/step-06-structure.md`  |
+| Step 7 | `_bmad/bmm/workflows/3-solutioning/create-architecture/steps/step-07-validation.md` |
+| Step 8 | `_bmad/bmm/workflows/3-solutioning/create-architecture/steps/step-08-complete.md`   |
 
 ---
 
-## Architecture Workflow Steps (BMAD)
+## Technology Stack Summary
 
-The architecture document is built through a structured workflow:
+### Confirmed Stack
 
-### ✅ Step 1: Document Initialization
-- Created architecture.md with frontmatter
-- Loaded input documents (PRD sections)
-- Established project context
+| Layer              | Technology     | Version        |
+| ------------------ | -------------- | -------------- |
+| Mobile             | Flutter        | 3.x            |
+| Backend            | FastAPI        | Latest         |
+| Language (Backend) | Python         | 3.11+          |
+| Database           | PostgreSQL     | 15.x (AWS RDS) |
+| Cache              | Redis          | 7.x (Cluster)  |
+| ORM                | SQLAlchemy     | 2.0 (async)    |
+| State Management   | Bloc/Cubit     | ^8.x           |
+| Navigation         | GoRouter       | ^13.x          |
+| Real-time          | Agora SDK      | ^6.x           |
+| Payments           | Razorpay       | Latest         |
+| Auth               | Firebase Auth  | Latest         |
+| Push               | Firebase FCM   | Latest         |
+| Cloud              | AWS            | Mumbai region  |
+| IaC                | Terraform      | Latest         |
+| CI/CD              | GitHub Actions | -              |
 
-### ✅ Step 2: Project Context Analysis
-- Drafted comprehensive analysis of:
-  - Requirements overview (203 requirements)
-  - Non-functional requirements
-  - Scale & complexity assessment
-  - Technical constraints
-  - Cross-cutting concerns
-- **Status:** Ready to append to document
+### External Services
 
-### 🔄 Step 3: Starter Template Selection (Next)
-- Choose architecture documentation approach
-- Options: Full template, minimal template, custom flow
-- Will load `step-03-starter.md` to begin
-
-### 📋 Subsequent Steps (TBD)
-The workflow will guide through:
-- System context and boundaries
-- Component identification
-- Data flow and integration patterns
-- Deployment architecture
-- Security architecture
-- Quality attributes (performance, scalability, reliability)
-- Architecture decision records (ADRs)
-- Risk assessment and mitigation
+| Service      | Purpose            | Criticality |
+| ------------ | ------------------ | ----------- |
+| Agora        | Voice/video calls  | CRITICAL    |
+| Razorpay     | Payments & payouts | CRITICAL    |
+| Firebase     | Auth + Push        | CRITICAL    |
+| Google/Azure | AI moderation      | HIGH        |
+| Karza        | KYC verification   | HIGH        |
 
 ---
 
-## Important Notes
+## Remaining Workflow Steps
 
-### Git Status
-- Current branch: `requirement_groom_mkumaran`
-- Main branch: `main`
-- Untracked files: `.claude/commands/bmad-*.md` files and `_bmad/` directory
-- Last commit: "feat: Complete PRD breakdown for all 15 sections with final deliverables"
+### Step 5: Implementation Patterns (Current)
 
-### BMAD Configuration
-- **User name:** Nandhu
-- **Project name:** Livvly-Req
-- **Skill level:** Intermediate
-- **Output folder:** `_bmad-output/`
-- **Planning artifacts:** `_bmad-output/planning-artifacts/`
-- **Language:** English
+- Confirm naming conventions
+- Confirm event/state patterns
+- Confirm error handling patterns
+- Append to architecture.md
 
-### Cost Implications (Reference)
-- **MVP Infrastructure:** $150-180/month (right-sized approach)
-- **Annual savings:** $3,480/year vs premium over-provisioning
-- **Database:** Start with managed RDS, defer sharding to 1M+ users
-- **Agora costs:** ~₹2-4L/month @ 10K MAU (scales with usage)
+### Step 6: Project Structure
+
+- Define complete folder structure
+- File organization patterns
+- Module boundaries
+
+### Step 7: Validation
+
+- Review architecture completeness
+- Cross-reference with PRD requirements
+- Identify gaps
+
+### Step 8: Complete
+
+- Finalize document
+- Generate summary
+- Archive workflow state
 
 ---
 
-## Commands to Continue
+## Quick Reference: Confirmed Decisions
 
-### If resuming immediately:
-```bash
-# In Claude Code CLI
-Continue the architecture workflow from Step 2.
-Append the drafted Project Context Analysis and proceed to Step 3.
+### Caching TTLs
+
+- User Profiles: 1 hour
+- Creator Status: 30 seconds
+- Gift Catalog: 24 hours
+- Rate Limiting: 1 minute
+- JWT Refresh: 30 days
+
+### JWT Config
+
+- Algorithm: RS256
+- Access: 1 hour
+- Refresh: 30 days
+- Storage: Flutter Secure Storage / Redis
+
+### RBAC Roles
+
+- `user` - Default consumer
+- `creator` - Extends user with earnings/payouts
+- `admin` - Full system access
+
+### API Response Format
+
+```json
+{"success": true, "data": {}, "meta": {}}
+{"success": false, "error": {"code": "", "message": "", "details": {}}}
 ```
 
-### If starting fresh:
-```bash
-# In Claude Code CLI
-Read continue.md to understand where we left off in the architecture workflow,
-then resume from Step 2 (finalizing Project Context Analysis).
-```
+### Real-time Stack
 
-### If restarting the architecture workflow from scratch:
-```bash
-# Only if you want to completely restart (not recommended)
-/bmad-bmm-create-architecture
-
-# Then select option 2: Load existing documents
-# Then confirm: PRD/master-index.md and technical sections
-```
+- Calls: Agora RTC
+- Signaling: Agora RTM + FCM
+- Status: Redis + API polling (30s)
 
 ---
 
-## Troubleshooting
+## Session Notes
 
-### If architecture.md is missing or corrupted:
-1. Check `_bmad-output/planning-artifacts/architecture.md`
-2. Verify frontmatter shows `stepsCompleted: [1]` or `stepsCompleted: [1, 2]`
-3. If missing, restart: `/bmad-bmm-create-architecture`
-
-### If PRD files are not found:
-1. Verify PRD folder exists: `ls PRD/`
-2. Check master-index: `PRD/master-index.md`
-3. Verify breakdown folder: `PRD/breakdown/`
-
-### If BMAD workflow commands don't work:
-1. Check BMAD installation: `.claude/commands/bmad-*.md` files should exist
-2. Verify config: `_bmad/core/config.yaml` and `_bmad/bmm/config.yaml`
-3. If missing, BMAD may need to be reinstalled
+- **Date:** 2026-02-03
+- **Session Type:** Architecture workflow continuation
+- **User:** Nandhu
+- **Paused At:** Step 5 - Implementation Patterns proposed, awaiting confirmation
+- **Next Action:** Confirm patterns → Save to doc → Proceed to Step 6
 
 ---
 
-## Contact and Context
-
-- **Project Owner:** Nandhu
-- **Date Started:** 2026-02-02
-- **Session Context:** Full conversation history available in Claude Code transcript
-- **Transcript Location:** `~/.claude/projects/[project-id]/[session-id].jsonl`
-
----
-
-## Next Session Checklist
-
-When resuming, ensure you:
-
-- [ ] Read this continue.md file completely
-- [ ] Verify PRD files are accessible (`PRD/master-index.md`)
-- [ ] Check current architecture document (`_bmad-output/planning-artifacts/architecture.md`)
-- [ ] Confirm frontmatter shows correct `stepsCompleted` array
-- [ ] Load step-03-starter.md to continue workflow
-- [ ] Reference scalability review findings (2026-02-02) for technical decisions
-
----
-
-**Ready to continue? Use the commands above to resume the architecture workflow!**
+**Ready to continue? Use the resume commands above!**
